@@ -135,6 +135,34 @@ automatically once brainstorming completes:
 4. `superpowers:subagent-driven-development` → implement + two-stage review
 5. `superpowers:finishing-a-development-branch` → merge/PR/keep/discard
 
+### Testing Gates (per task, during subagent-driven-development)
+
+Gates activate based on Phase 0 classification flags. They modify
+how the Superpowers `subagent-driven-development` skill dispatches
+and reviews each task.
+
+**When `bug_as_test_gate = true` (bugfix):**
+- Load `./bug-as-test-prompt.md` and append to the implementer prompt
+- Implementer MUST reproduce the bug as a failing test first
+- If non-reproducible: implementer reports `BLOCKED_NON_REPRODUCIBLE`
+  with 3 alternative approaches. Present to user for choice.
+- If infrastructure-only: implementer reports `BLOCKED_INFRA`.
+  Spec reviewer validates the justification.
+- Iron law: `NO BUGFIX WITHOUT EVIDENCE.`
+
+**When `acceptance_test_gate = true` (feature):**
+- After implementation, before spec review:
+  check if acceptance criteria from brainstorm have corresponding tests
+- If mapping complete: load `./acceptance-gate-prompt.md`, replace the
+  `[ACCEPTANCE_CRITERIA]` placeholder with the actual criteria list from
+  brainstorm, and append to the spec reviewer prompt
+- If mapping incomplete: send uncovered criteria back to implementer
+- Max 2 attempts. After 2nd failure, escalate to user:
+  "Approve override, or reword the criteria?"
+
+**When neither flag is set (chore):**
+- Standard Superpowers TDD. No extra gates.
+
 ### Delivery-specific additions
 
 After Superpowers finishes:
