@@ -1,4 +1,4 @@
-Execute tech debt removal using the delivery-cycle:removedebt skill.
+Execute tech debt removal using the hypership:removedebt skill.
 
 The user is a senior engineer. Be direct, propose concrete tradeoffs,
 and let them decide what to cut. Never remove debt they didn't approve.

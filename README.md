@@ -100,8 +100,8 @@ The plugin auto-detects whichever memory system is present and uses it.
 /plugin marketplace add obra/superpowers-marketplace
 /plugin install superpowers@superpowers-marketplace
 
-# Install delivery-cycle
-/plugin install your-org/delivery-cycle
+# Install hypership
+/plugin install hgrafa/hypership
 ```
 
 ## Project Setup
