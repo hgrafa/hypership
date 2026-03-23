@@ -1,4 +1,4 @@
-# hypership 🚀
+# Hypership
 
 AI-first delivery and tech debt management for senior engineering teams.
 
