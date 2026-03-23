@@ -32,14 +32,17 @@ Every prompt is classified into exactly one type:
 
 | Type | Criteria | Example |
 |------|----------|---------|
-| `feature` | New functionality, no bug mention | "add Stripe refund flow" |
+| `feature` | New functionality, no bug mention, no pure refactor | "add Stripe refund flow" |
 | `bugfix` | Mentions error, bug, break, regression | "fix race condition in checkout" |
-| `mixed` | Contains explicit feature + fix | "fix the login bug and add 2FA" |
+| `chore` | Refactoring, dependency updates, config changes, performance tuning — no new behavior, no bug | "refactor auth module", "update dependencies", "improve query performance" |
+| `mixed` | Contains explicit feature + fix, or feature + chore | "fix the login bug and add 2FA" |
 | `overloaded` | 3+ distinct concerns, or scope too vague | "refactor auth, add billing, fix payments" |
 
 ### Behavior by Type
 
 **`feature`** — proceeds to Phase 1. Internal flag: `acceptance_test_gate = true`.
+
+**`chore`** — proceeds to Phase 1 with no testing gates. Superpowers TDD still applies (the implementer writes tests for what they change), but no acceptance criteria mapping and no bug reproduction. If the chore is pure refactoring, suggest `/removedebt` instead — it has better tooling for that. If user insists on `/delivery`, proceed without gates.
 
 **`bugfix`** — presents to user:
 
@@ -194,7 +197,12 @@ Brainstorm produces acceptance criteria
               - [criterion X]
               - [criterion Y]
              Write tests for these before proceeding."
-             -> loops back to gate check
+             -> loops back to gate check (max 2 attempts)
+             -> after 2nd failure, escalates to user:
+                "Could not map tests to these criteria
+                 after 2 attempts:
+                 - [criterion X]
+                 Approve override, or reword the criteria?"
 ```
 
 ### What Changes in Spec Reviewer
@@ -272,7 +280,7 @@ Snapshot captured: 247 pass, 3 fail (pre-existing), 82% coverage
             -> escape_list = [declared patterns]
 ```
 
-**Rule:** Escape hatch is declarative and upfront. Cannot be invoked after a test breaks — that would be rationalization, not planning.
+**Rule:** Escape hatch is declarative and upfront. The `escape_list` is **immutable once execution begins** — it is frozen at declaration time and cannot be modified, extended, or overridden after the first refactor category starts. This is enforced by flow (the escape hatch question is asked exactly once, before execution), not by instructional text. Any test failure outside the frozen list triggers the hard stop regardless of context.
 
 ### Gate 3: Hard Stop with Delta (after each debt category)
 
@@ -420,7 +428,8 @@ hypership/
 | Context | Gate | When | Enforces | Blocks? |
 |---------|------|------|----------|---------|
 | `/delivery` bugfix | Bug-as-Test | Before implementation | Failing test reproducing the bug | Yes, but offers 3 non-reproducible fallbacks |
-| `/delivery` feature | Acceptance Coverage | After implementation, before spec review | Tests mapped 1:1 to acceptance criteria | Yes, loops until covered |
+| `/delivery` feature | Acceptance Coverage | After implementation, before spec review | Tests mapped 1:1 to acceptance criteria | Yes, max 2 attempts then escalates to user |
+| `/delivery` chore | None (TDD only) | N/A | Standard Superpowers TDD, no extra gates | No |
 | `/delivery` mixed | Both | After decomposition, per item | Each item gets its type-appropriate gate | Per item |
 | `/removedebt` | Snapshot | Before any execution | Test baseline captured | Yes, if test cmd fails |
 | `/removedebt` | Escape Hatch | After snapshot, before execution | Engineer declares expected breaks upfront | No (declaration) |
