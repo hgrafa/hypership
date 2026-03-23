@@ -13,6 +13,46 @@ Orchestrate feature delivery choosing the right strategy for the task.
 Your audience is senior engineers who make architectural decisions — be
 direct, technical, and skip introductory explanations.
 
+## Phase 0: Classify & Decompose
+
+Before evaluating delivery strategy, classify the prompt.
+
+### Classification
+
+| Type | Criteria | Behavior |
+|------|----------|----------|
+| `feature` | New functionality, no bug mention, no pure refactor | Proceed. Flag: `acceptance_test_gate = true` |
+| `bugfix` | Mentions error, bug, break, regression | Ask user to describe expected vs actual. Flag: `bug_as_test_gate = true` |
+| `chore` | Refactoring, dependency updates, config changes, performance tuning — no new behavior, no bug | Suggest `/removedebt` if pure refactoring. If user insists, proceed with standard TDD only — no extra gates. |
+| `mixed` | Contains feature + fix, or feature + chore | Decompose (see below) |
+| `overloaded` | 3+ distinct concerns, or scope too vague | Do not execute. Help refine. |
+
+### Mixed Prompt Handling
+
+Decompose and present:
+
+> "I identified [N] distinct work items in this prompt:
+> 1. **[type]**: [description]
+> 2. **[type]**: [description]
+>
+> Options:
+> - **Sequential**: [recommended order with reasoning]
+> - **Parallel**: independent deliveries via subagents (if no dependency)
+>
+> Which do you prefer?"
+
+After choice, each item enters the pipeline independently with its
+own type classification and corresponding gates.
+
+### Overloaded Prompt Handling
+
+> "This prompt has [N] distinct concerns: [list]. For maximum quality,
+> I propose breaking into separate deliveries. Which do you want to
+> tackle first?"
+
+If user insists on everything together, force decomposition into
+independent stories during brainstorm.
+
 ## Decision: Superpowers Pipeline vs Ralph Loop
 
 Before starting, evaluate the task against these criteria:
