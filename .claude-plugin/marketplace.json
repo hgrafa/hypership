@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "hypership",
+      "description": "AI-first delivery and tech debt management. /delivery wraps Superpowers+Ralph for feature implementation. /removedebt analyzes git diffs and removes real tech debt with strategic questions for senior engineers.",
+      "repository": "hgrafa/hypership"
+    }
+  ]
+}

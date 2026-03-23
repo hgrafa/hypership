@@ -1,0 +1,10 @@
+{
+  "name": "hypership",
+  "version": "1.0.0",
+  "description": "AI-first delivery and tech debt management for senior engineering teams. Wraps Superpowers and Ralph Loop with intelligent orchestration.",
+  "author": "hgrafa",
+  "license": "MIT",
+  "dependencies": {
+    "plugins": ["superpowers@superpowers-marketplace"]
+  }
+}
