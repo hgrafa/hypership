@@ -167,6 +167,35 @@ Total estimated effort: ~2h for Priority 1-2, ~1h for Priority 3.
 Want to proceed with all, or pick specific priorities?
 ```
 
+## Phase 3.5: Safety Gates
+
+After the engineer approves findings and before executing any refactor,
+activate the safety gates protocol.
+
+**Load `./safety-gates.md`** and follow the 3-gate protocol:
+
+### Gate 1: Snapshot
+- Run full test suite, capture baseline (pass/fail/skip counts, coverage if available)
+- Record already-failing tests (excluded from delta later)
+- If test command cannot be found or fails: **STOP** — do not proceed
+
+### Gate 2: Escape Hatch
+- Ask engineer which tests may break intentionally
+- Record as `escape_list` — **immutable once execution begins**
+- If "none": any new failure triggers hard stop
+
+### Gate 3: Hard Stop with Delta (after EACH category)
+- Run tests after each refactor category completes
+- Compare with snapshot baseline
+- New failures outside escape_list → **HARD STOP** with options:
+  [A] Revert  [B] Investigate (systematic-debugging)  [C] Continue (user's risk)
+- New failures inside escape_list → log and continue
+- Coverage drop on touched files → warning (non-blocking)
+- All clean → proceed to next category
+
+**The safety-gates.md fragment contains the full protocol with exact
+wording for each gate, decision tree, and debt-log test fields template.**
+
 ## Phase 4: Execution
 
 For each approved debt item, execute via Superpowers pipeline:
@@ -192,9 +221,11 @@ For each approved debt item, execute via Superpowers pipeline:
 
 - **One refactor category at a time.** Don't mix duplication removal
   with dead code cleanup in the same subagent task.
-- **Run ALL tests after each task**, not just related ones.
-- **If a test breaks, STOP and ask the user.** Don't auto-fix — the
-  break might reveal a dependency they know about.
+- **Safety gates handle test verification.** After each category,
+  Gate 3 runs the full test suite and compares with baseline.
+  Do not run ad-hoc test checks — the gate protocol handles this.
+- **If Gate 3 triggers a hard stop**, present the options to the user.
+  Do not auto-fix or auto-revert.
 - **Commit after each category** with: `refactor(debt): [category] [scope]`
   Example: `refactor(debt): extract shared payment validation`
 
@@ -220,9 +251,12 @@ After execution (or if user skips everything), update `docs/debt-log.md`:
 | 4 | 🧪 Missing Tests | payments/refund.ts | Add coverage | ✅ Done |
 
 ### Tests
-- Before: [pass/fail count]
-- After: [pass/fail count]
-- Regressions: none | [description]
+- Baseline: [N] pass, [N] fail (pre-existing), [N]% coverage
+- After: [N] pass, [N] fail (pre-existing), [N]% coverage
+- Declared breaks: [N] ([description])
+- Unexpected breaks: [N]
+- Hard stops triggered: [N]
+- Coverage delta: [+/-N]% ([reason])
 
 ### Branch
 - `refactor/removedebt-YYYY-MM-DD-payments`
