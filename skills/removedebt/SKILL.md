@@ -284,8 +284,12 @@ After execution (or if user skips everything), update `docs/debt-log.md`:
   User decides: proceed / skip / manual per group
        │
        ▼
+  Safety gates: snapshot baseline, declare escape hatch
+       │
+       ▼
   Execute approved items via Superpowers pipeline
   (brainstorm → plan → SDD with TDD + two-stage review)
+  [Gate 3 delta check after each category]
        │
        ▼
   Log to docs/debt-log.md

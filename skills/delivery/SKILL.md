@@ -53,6 +53,17 @@ own type classification and corresponding gates.
 If user insists on everything together, force decomposition into
 independent stories during brainstorm.
 
+### Gate Applicability by Mode
+
+Phase 0 classification applies regardless of delivery mode:
+- **Superpowers mode**: gates activate directly via prompt fragments
+  (bug-as-test for implementer, acceptance-gate for spec reviewer)
+- **Ralph Loop mode**: gates are embedded in the PRD — bugfix stories
+  must include "reproduce as failing test" as the first acceptance
+  criterion; feature stories must have explicit acceptance criteria
+  that map 1:1 to tests. Ralph's per-story execution inherits TDD
+  from Superpowers but does not have the two-stage review gate.
+
 ## Decision: Superpowers Pipeline vs Ralph Loop
 
 Before starting, evaluate the task against these criteria:
