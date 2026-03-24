@@ -25,8 +25,8 @@ The aesthetic evokes a professional technical document — monospaced typography
 - Primary text: `#2c2418` (deep warm brown)
 - Secondary text: `#6b5d4f` (muted brown)
 - Accent/labels: `#8a7a65` (medium sepia)
-- Surface: `rgba(44,36,24,0.04-0.06)` (faint warm overlay)
-- Borders/dividers: `rgba(138,122,101,0.12-0.25)` (subtle sepia lines)
+- Surface: `--surface` at `rgba(44,36,24,0.04)`, `--surface-hover` at `rgba(44,36,24,0.06)`
+- Borders: `--border` at `rgba(138,122,101,0.12)`, `--border-strong` at `rgba(138,122,101,0.25)`
 - Success accent: `#9a8a6e` (warm olive for checkmarks/confirmations)
 - Warning/debt accent: `#966b5a` (warm terracotta for code smell annotations)
 
@@ -48,13 +48,16 @@ Triggered by `prefers-color-scheme: dark`. Not a generic dark mode — "the same
 
 Font stack: `'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace`
 
-- Logo/brand: 12px, weight 700, letter-spacing 1px
-- Section labels: 9px, uppercase, letter-spacing 2-3px, accent color
-- Headlines: 22-28px, weight 700, line-height 1.2
-- Subheadlines: 16px, weight 600
-- Body: 10-11px, line-height 1.6-1.7
-- Code/terminal: 9-10px, line-height 1.8-2.0
-- CTAs/buttons: 10-11px, letter-spacing 1px
+All sizes use `rem` units (base 16px) to respect user font-size preferences.
+
+- Logo/brand: 0.875rem (14px), weight 700, letter-spacing 1px
+- Section labels: 0.6875rem (11px), uppercase, letter-spacing 2-3px, accent color
+- Headlines: 1.75-2.25rem (28-36px), weight 700, line-height 1.2
+- Subheadlines: 1.25rem (20px), weight 600
+- Body: 0.9375rem (15px), line-height 1.6-1.7
+- Code/terminal: 0.875rem (14px), line-height 1.8-2.0
+- CTAs/buttons: 0.875rem (14px), letter-spacing 1px
+- Small labels/tags: 0.75rem (12px)
 
 ## Landing Page Structure
 
@@ -62,15 +65,15 @@ Font stack: `'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace`
 
 Minimal top bar:
 - Left: "hypership" logo text (weight 700)
-- Right: links — "quick start", "use cases", "github ↗" (9px uppercase)
+- Right: links — "quick start", "use cases", "github ↗" (small labels, uppercase)
 
 ### Section 1: Hero
 
 Centered layout:
-- Label: "claude code plugin" (9px uppercase, accent color)
-- Headline: **"delivery-obsessed engineering."** (28px, weight 700)
-- Subtitle: **"Ship features. Kill debt. Works with whatever plugins and agents you already use."** (12px, secondary text)
-- CTA: `$ claude install hypership` in a bordered box (1.5px solid accent)
+- Label: "claude code plugin" (small labels, uppercase, accent color)
+- Headline: **"delivery-obsessed engineering."** (hero size, weight 700)
+- Subtitle: **"Ship features. Kill debt. Works with whatever plugins and agents you already use."** (body size, secondary text)
+- CTA: `/plugin install hgrafa/hypership` in a bordered box (1.5px solid accent). Uses Claude Code prompt prefix `>` instead of shell `$` to distinguish slash commands from shell commands.
 
 ### Section 2: Quick Start
 
@@ -78,11 +81,11 @@ Three-column layout — "Three commands. Zero config."
 
 | Column | Label | Command | Description |
 |--------|-------|---------|-------------|
-| 01 — install | `$ claude install hypership` | Reads your CLAUDE.md. Adapts to your stack. Done. |
-| 02 — deliver | `$ /delivery add roles to auth` | Classifies, plans, tests, ships. Your plugins, your pipeline. |
-| 03 — consolidate | `$ /removedebt last 3 features` | Scans real debt. You decide. Safety gates protect you. |
+| 01 — install | `> /plugin install hgrafa/hypership` | Reads your CLAUDE.md. Adapts to your stack. Done. |
+| 02 — deliver | `> /delivery add roles to auth` | Classifies, plans, tests, ships. Your plugins, your pipeline. |
+| 03 — consolidate | `> /removedebt last 3 features` | Scans real debt. You decide. Safety gates protect you. |
 
-Each column: warm surface background, left border accent (2px), label in 8px uppercase.
+All commands use `>` prompt prefix (Claude Code input), not `$` (shell). Each column: warm surface background, left border accent (2px), label in small uppercase.
 
 ### Section 3: Philosophy
 
@@ -109,7 +112,7 @@ Grid of 5 cards (2 columns, last row centered or full-width):
 | 04 | Cycle visibility | Tech lead wants to see the rhythm. /status shows health, signals when to consolidate. |
 | 05 | Legacy without fear | Inherited monolith. Module-scoped cleanup with snapshot, escape hatch, hard stop. |
 
-Each card: number label (8px uppercase), title (11px bold), description (9px), "VIEW CASE →" link.
+Each card: number label (small labels, uppercase), title (body bold), description (body), "VIEW CASE →" link.
 
 ### Section 5: Footer
 
@@ -125,9 +128,9 @@ Breadcrumb style: "hypership / use cases / [case name]" left, "← all cases" ri
 
 ### Header
 
-- Case number label (9px uppercase)
-- Title (22px, weight 700)
-- Subtitle (11px, secondary text)
+- Case number label (small labels, uppercase)
+- Title (xl size, weight 700)
+- Subtitle (body, secondary text)
 
 ### Dual Mode Tabs
 
@@ -158,7 +161,7 @@ The dialogue format:
 
 Split view with two columns:
 
-- **Left column ("the flow")**: terminal-style dialogue showing commands and Hypership responses in dark terminal blocks (`background: #1b1b1c`)
+- **Left column ("the flow")**: terminal-style dialogue showing commands and Hypership responses in dark terminal blocks (`background: var(--terminal-bg)`)
 - **Right column ("the code")**: pseudocode showing what's emerging in the codebase — clean code after step 1, duplication/shortcuts appearing after step 2, unified clean code after removedebt
 
 A callout bar between steps reads: **"the tension is the point"** with "← discipline" on the left and "reality →" on the right.
@@ -178,6 +181,114 @@ Code syntax uses:
 ### Navigation Footer
 
 Between usecase pages: "← all cases" left, "next: [case name] →" right.
+
+## Content Authoring Format (MDX)
+
+Each usecase is an MDX file with frontmatter metadata and Astro components for dual-mode rendering. Example structure for `evolving-a-system.mdx`:
+
+```mdx
+---
+number: "01"
+title: "Evolving a system"
+subtitle: "Auth → roles → claims → granular permissions. How iterative delivery builds complex systems one layer at a time."
+scenario: "You have a working auth system. Now the product needs roles, then claims, then granular permissions."
+next: { slug: "debt-after-a-sprint", title: "Debt after a sprint" }
+prev: null
+---
+
+import { Dialogue, Msg, SplitView, FlowStep, CodeStep, Tension } from '../../components'
+
+{/* out-of-the-box mode */}
+<Dialogue>
+  <Msg from="you">/delivery add role-based access to auth</Msg>
+  <Msg from="hs" tags={["brainstorm ✓", "plan ✓", "TDD ✓", "gate ✓"]}>
+    Classified as **feature**. Using Superpowers pipeline.
+    Brainstormed scope, wrote plan with 3 tasks, implemented with TDD.
+    Acceptance gate: 3/3 criteria covered.
+  </Msg>
+  <Msg from="you">/delivery add claims and granular permissions</Msg>
+  <Msg from="hs" tags={["builds on step 1", "fresh context"]}>
+    Builds on roles layer. Fresh brainstorm, 5 tasks planned.
+    Delivered — tagged delivery/claims-v1.
+  </Msg>
+  <Msg from="you">/removedebt auth last 2 features</Msg>
+  <Msg from="hs" tags={["3 findings", "safety gates ✓"]}>
+    Found 3 real items, filtered 8 speculative. Safety gates active.
+    3/3 consolidated — 47/47 tests, zero regressions.
+  </Msg>
+</Dialogue>
+
+{/* im-a-nerd mode */}
+<SplitView>
+  <FlowStep title="First delivery">
+    ```terminal
+    ~ $ /delivery add role-based access to auth
+    ⟩ classified: feature
+    ⟩ pipeline: superpowers
+    ⟩ brainstorm → plan → TDD
+    ✓ delivered
+    ```
+  </FlowStep>
+  <CodeStep title="Clean code" annotation="clean, focused, tested ✓" mood="clean">
+    ```ts
+    // auth/roles.ts
+    function checkRole(user, role) {
+      return user.roles.includes(role)
+    }
+    ```
+  </CodeStep>
+
+  <FlowStep title="Second delivery">
+    ```terminal
+    ~ $ /delivery add claims and granular permissions
+    ⟩ classified: feature
+    ⟩ 5 tasks planned
+    ✓ delivered
+    ```
+  </FlowStep>
+  <CodeStep title="Duplication creeping in" annotation="duplication creeping in — shipped fast, works, but..." mood="debt">
+    ```ts
+    // auth/permissions.ts
+    function checkPermission(user, perm) {
+      const role = getUserRole(user) // ← duplicates checkRole logic
+      return claims[role]?.includes(perm)
+    }
+    ```
+  </CodeStep>
+
+  <Tension left="discipline" right="reality" />
+
+  <FlowStep title="Consolidation">
+    ```terminal
+    ~ $ /removedebt auth last 2 features
+    ⟩ found 3 concrete, filtered 8 speculative
+    ⟩ snapshot: 47 tests ✓
+    ⟩ executing... 47/47 ✓ per item
+    ✓ consolidated — zero regressions
+    ```
+  </FlowStep>
+  <CodeStep title="Unified" annotation="clean, unified, zero duplication ✓" mood="clean">
+    ```ts
+    // auth/access.ts ← unified
+    function checkAccess(user, requirement) {
+      if (requirement.type === 'role')
+        return user.roles.includes(requirement.value)
+      if (requirement.type === 'permission')
+        return resolveClaims(user).has(requirement.value)
+    }
+    ```
+  </CodeStep>
+</SplitView>
+```
+
+### Component Props
+
+- `<Dialogue>`: wrapper for out-of-the-box mode. Only visible when that tab is active.
+- `<Msg from="you"|"hs" tags={[...]}>`: single dialogue message. `from` determines avatar and alignment. `tags` renders status pills below hs messages.
+- `<SplitView>`: wrapper for im-a-nerd mode. Renders paired FlowStep/CodeStep columns.
+- `<FlowStep title>`: left-column terminal block with title annotation.
+- `<CodeStep title annotation mood="clean"|"debt">`: right-column code block. `mood` controls annotation color (clean=`--success`, debt=`--warning`).
+- `<Tension left right>`: centered callout bar between step pairs.
 
 ## Usecase Content Summary
 
@@ -256,7 +367,7 @@ site/
 │   └── fonts/                    # JetBrains Mono (self-hosted)
 ├── src/
 │   ├── layouts/
-│   │   ├── Base.astro            # HTML shell, dark mode, fonts, texture
+│   │   ├── Base.astro            # HTML shell, dark mode, fonts, texture, OG meta
 │   │   ├── Landing.astro         # Landing page layout
 │   │   └── Usecase.astro         # Usecase subpage layout with tabs
 │   ├── components/
@@ -274,6 +385,7 @@ site/
 │   │   └── CodeBlock.astro       # Syntax-highlighted code block
 │   ├── pages/
 │   │   ├── index.astro           # Landing page
+│   │   ├── 404.astro             # Not found page (Typewriter Craft styled)
 │   │   └── cases/
 │   │       ├── evolving-a-system.mdx
 │   │       ├── debt-after-a-sprint.mdx
@@ -290,7 +402,7 @@ site/
 
 ```css
 :root {
-  /* Light mode */
+  /* Light mode — colors */
   --bg: #f5f0e8;
   --text-primary: #2c2418;
   --text-secondary: #6b5d4f;
@@ -303,15 +415,36 @@ site/
   --warning: #966b5a;
   --terminal-bg: #1b1b1c;
 
-  /* Typography */
+  /* Light mode — code syntax */
+  --code-keyword: #6b4423;
+  --code-string: #4a6b2a;
+  --code-comment: #8a7a65;
+
+  /* Typography (rem-based, 16px root) */
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --text-xs: 8px;
-  --text-sm: 9px;
-  --text-base: 10px;
-  --text-md: 11px;
-  --text-lg: 16px;
-  --text-xl: 22px;
-  --text-hero: 28px;
+  --text-xs: 0.75rem;    /* 12px — tags, small labels */
+  --text-sm: 0.8125rem;  /* 13px — section labels */
+  --text-base: 0.9375rem;/* 15px — body text */
+  --text-md: 1rem;       /* 16px — body emphasis */
+  --text-lg: 1.25rem;    /* 20px — subheadlines */
+  --text-xl: 1.75rem;    /* 28px — page titles */
+  --text-hero: 2.25rem;  /* 36px — hero headline */
+  --text-code: 0.875rem; /* 14px — code/terminal */
+
+  /* Spacing scale (8px base) */
+  --space-1: 0.5rem;   /* 8px */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2rem;     /* 32px */
+  --space-5: 3rem;     /* 48px */
+  --space-6: 4rem;     /* 64px */
+
+  /* Layout */
+  --content-max-width: 960px;
+  --content-padding: var(--space-4); /* 32px horizontal padding */
+  --section-gap: var(--space-5);     /* 48px between sections */
+  --grid-gap: var(--space-2);        /* 16px grid/card gap */
+  --column-gap: var(--space-3);      /* 24px between columns */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -324,9 +457,9 @@ site/
     --surface-hover: rgba(220, 210, 195, 0.06);
     --border: rgba(108, 108, 98, 0.05);
     --border-strong: rgba(130, 135, 145, 0.10);
-    --terminal-bg: #141415;
+    --terminal-bg: #141415; /* darker than --bg for contrast */
 
-    /* Code syntax (dark only) */
+    /* Code syntax (dark) */
     --code-keyword: #c8a87a;
     --code-string: #a8c878;
     --code-comment: #636158;
@@ -337,20 +470,37 @@ site/
 ## Responsive Behavior
 
 - **Desktop (>768px)**: full layout as described — 3-column quick start, 2-column usecase grid, split view in im-a-nerd mode
-- **Tablet (768px)**: 2-column quick start collapses to stacked, usecase grid becomes single column, split view stacks (flow on top, code below)
+- **Tablet (480-768px)**: quick start collapses to stacked, usecase grid becomes single column, split view stacks (flow on top, code below)
 - **Mobile (<480px)**: single column throughout, tabs remain functional, terminal blocks scroll horizontally if needed
+
+## Metadata & SEO
+
+`Base.astro` includes:
+- `<title>` and `<meta name="description">` per page (frontmatter-driven)
+- Open Graph tags: `og:title`, `og:description`, `og:type` ("website"), `og:image` (parchment-textured card with logo)
+- Twitter card: `twitter:card` ("summary_large_image")
+- Favicon: monospaced "h" glyph on parchment background, provided as SVG + PNG fallback
+- Canonical URL
+
+### Tab Persistence Without Flash
+
+`Base.astro` includes an inline `<script>` in `<head>` (before paint) that reads localStorage and sets a `data-mode` attribute on `<html>`. CSS uses this attribute to show the correct tab content on first render, avoiding flash-of-wrong-content.
 
 ## Acceptance Criteria
 
 1. Landing page loads with all 5 sections in correct order
-2. Quick start shows 3-step flow with real commands
+2. Quick start shows 3-step flow with correct commands (using `>` prefix for Claude Code slash commands)
 3. Usecase cards link to individual subpages
-4. Tab toggle persists across page navigation (localStorage)
+4. Tab toggle persists across page navigation (localStorage) without flash-of-wrong-content
 5. out-of-the-box mode renders dialogue format with you/hs messages
 6. im-a-nerd mode renders split view with flow + code columns
 7. Dark mode activates via prefers-color-scheme with 30% warm palette
 8. Paper texture visible in both modes (SVG noise + ruled lines)
-9. All text in monospaced font stack
-10. Responsive: stacks gracefully on mobile/tablet
+9. All text in monospaced font stack using rem units
+10. Responsive: stacks gracefully at 480px and 768px breakpoints
 11. Astro builds to fully static output, zero client JS except tab toggle + localStorage
-12. All 5 usecase subpages have content for both modes
+12. All 5 usecase subpages have content for both modes using the MDX component schema
+13. Lighthouse performance score >= 95 on landing page
+14. Open Graph and Twitter Card meta tags present on all pages
+15. 404 page renders in Typewriter Craft aesthetic
+16. Install command matches actual plugin registry (`/plugin install hgrafa/hypership`)
