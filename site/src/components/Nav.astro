@@ -1,0 +1,67 @@
+---
+interface Props {
+  breadcrumb?: string;
+}
+const { breadcrumb } = Astro.props;
+---
+
+<nav class="nav">
+  <div class="nav-inner container">
+    <div class="nav-left">
+      <a href="/" class="logo">hypership</a>
+      {breadcrumb && <span class="breadcrumb">/ {breadcrumb}</span>}
+    </div>
+    <div class="nav-right">
+      {!breadcrumb && (
+        <>
+          <a href="/#quick-start">quick start</a>
+          <a href="/#use-cases">use cases</a>
+        </>
+      )}
+      {breadcrumb && (
+        <a href="/#use-cases">← all cases</a>
+      )}
+      <a href="https://github.com/hgrafa/hypership" target="_blank" rel="noopener">github ↗</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .logo {
+    font-size: var(--text-code);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .breadcrumb {
+    font-size: var(--text-sm);
+    color: var(--text-accent);
+  }
+  .nav-right {
+    display: flex;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .nav-right a {
+    color: var(--text-accent);
+  }
+  .nav-right a:hover {
+    color: var(--text-primary);
+  }
+</style>
