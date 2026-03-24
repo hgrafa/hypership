@@ -42,7 +42,7 @@ New file. User-editable configuration.
 
 **Why a separate file:** `plugin.json` is the manifest — it declares what the plugin IS. Config declares how it BEHAVES. Mixing them creates ambiguity about which fields are spec-required vs custom. Separate file also allows future config expansion without touching the manifest.
 
-**How it's consumed:** The session-start hook reads this file with `jq`. If `jq` is unavailable or the file is missing, defaults to `false`.
+**How it's consumed:** The session-start hook reads this file using POSIX tools (`grep`). If the file is missing or unreadable, defaults to `false`. Any value other than literal `true` for `strictDeliveryFramework` is treated as `false` (fail-open — no complex validation for a user-editable config).
 
 ---
 
@@ -61,7 +61,8 @@ New file. Formal hook registration following Superpowers pattern.
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start",
+            "async": false
           }
         ]
       }
@@ -70,20 +71,31 @@ New file. Formal hook registration following Superpowers pattern.
 }
 ```
 
-**Matcher:** Activates on session startup, after `/clear`, and after `/compact` — same events Superpowers hooks into.
+**Matcher:** Activates on session startup, after `/clear`, and after `/compact` — same events Superpowers hooks into. `async: false` ensures the context is injected before the user starts interacting.
+
+**Discovery:** Claude Code discovers `hooks/hooks.json` by convention at the plugin root. No `plugin.json` modification is needed for hook registration.
+
+**Multi-plugin interaction:** Claude Code concatenates `additionalContext` from multiple plugin hooks. Hypership's context supplements (not replaces) the Superpowers context. Both hooks fire independently on SessionStart.
 
 ### `hooks/run-hook.cmd`
 
-New file. Windows-compatible wrapper that locates and executes the named hook script via bash. Follows the Superpowers pattern for cross-platform support.
+New file. Copy verbatim from Superpowers plugin (`~/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/hooks/run-hook.cmd`). This is a generic cross-platform polyglot (batch + bash) that:
+- On Windows: cmd.exe runs the batch portion, locates Git for Windows bash in standard paths, falls back to PATH
+- On Unix: shell interprets `:` as no-op, runs the named script directly via `exec bash`
+- Exits silently (exit 0) if no bash is found — plugin still works, just without session-start context
+
+The file is not Superpowers-specific and can be used as-is by any plugin.
 
 ### `hooks/session-start`
 
 New file. Bash script that:
 
-1. Detects `CLAUDE_PLUGIN_ROOT` from script location
-2. Reads `hypership.config.json` via `jq` (fallback: `strictDeliveryFramework=false`)
-3. Builds context string based on strict mode
-4. Outputs JSON with `hookSpecificOutput.additionalContext`
+1. Derives `PLUGIN_ROOT` from script directory: `SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd); PLUGIN_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)` — same pattern as Superpowers
+2. Reads `$PLUGIN_ROOT/hypership.config.json` using `grep` (no `jq` dependency): `grep -q '"strictDeliveryFramework"[[:space:]]*:[[:space:]]*true' "$CONFIG_FILE"` — match = strict, no match = suggestive
+3. Builds context string based on mode
+4. Escapes context for JSON embedding (handle backslashes, quotes, newlines, carriage returns, tabs — use a `escape_for_json()` function matching Superpowers pattern)
+5. Outputs JSON using `printf` (not heredoc — avoids bash 5.3+ bug with large content)
+6. Platform branching: if `CLAUDE_PLUGIN_ROOT` is set, output `hookSpecificOutput.hookEventName` + `hookSpecificOutput.additionalContext`; if `CURSOR_PLUGIN_ROOT` is set, output `additional_context`
 
 **Strict mode context (`strictDeliveryFramework: true`):**
 
@@ -101,7 +113,9 @@ Hypership is installed. When the user describes implementation work (features, f
 
 ### Cross-Platform Fix: `delivery-cycle-check.sh`
 
-Existing file. Replace GNU-only `grep -oP` with POSIX-compatible alternative:
+Existing file. Was listed as "unchanged" in the testing-safety-gates spec and "Fix cross-platform hook" was deferred to a future cycle. This spec picks up that deferred work.
+
+Replace GNU-only `grep -oP` with POSIX-compatible alternative:
 
 **Before:**
 ```bash
@@ -228,6 +242,8 @@ Changes from current:
 - `name` changed to `hypership-marketplace` (was just plugin name)
 - `description` aligned with plugin.json
 
+**Schema reference:** Structure mirrors Superpowers' marketplace.json (`~/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/.claude-plugin/marketplace.json`) which uses the same top-level `name`, `description`, `owner`, and nested `plugins` array with `version`, `source`, `author` fields.
+
 ---
 
 ## Part 5: README Marketplace-Grade
@@ -244,6 +260,22 @@ Complete rewrite. Structure:
 8. **Philosophy** — 5 bullet points, each one sentence
 9. **Stack** — required (Superpowers) and optional companions (Ralph Loop, Context7, GitHub MCP)
 10. **License** — MIT
+
+**Draft content for opinionated sections:**
+
+**Why Hypership:**
+> Every feature you ship accumulates debt. Every debt removal risks breaking what you shipped. Hypership solves both sides:
+> - `/delivery` — classifies your work (feature, bugfix, chore, mixed), applies testing gates, orchestrates Superpowers or Ralph Loop, logs everything
+> - `/removedebt` — scopes debt via git history, presents findings with strategic questions, executes with safety gates (snapshot, escape hatch, hard stop)
+>
+> You decide what to cut. Hypership executes with guardrails.
+
+**Philosophy bullets:**
+> - Features and debt removal are **separate activities**
+> - Debt is **concrete** (detectable via grep), not speculative
+> - Senior engineers **decide** — tool proposes, you dispose
+> - **No bugfix without evidence** — reproduce first, harden if you can't
+> - **No refactor without safety net** — snapshot, declare breaks, hard stop on surprises
 
 **Design principles for the README:**
 - Value before documentation (why → how → what)
