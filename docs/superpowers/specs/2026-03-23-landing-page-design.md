@@ -222,7 +222,7 @@ import { Dialogue, Msg, SplitView, FlowStep, CodeStep, Tension } from '../../com
 <SplitView>
   <FlowStep title="First delivery">
     ```terminal
-    ~ $ /delivery add role-based access to auth
+    > /delivery add role-based access to auth
     ⟩ classified: feature
     ⟩ pipeline: superpowers
     ⟩ brainstorm → plan → TDD
@@ -240,7 +240,7 @@ import { Dialogue, Msg, SplitView, FlowStep, CodeStep, Tension } from '../../com
 
   <FlowStep title="Second delivery">
     ```terminal
-    ~ $ /delivery add claims and granular permissions
+    > /delivery add claims and granular permissions
     ⟩ classified: feature
     ⟩ 5 tasks planned
     ✓ delivered
@@ -260,7 +260,7 @@ import { Dialogue, Msg, SplitView, FlowStep, CodeStep, Tension } from '../../com
 
   <FlowStep title="Consolidation">
     ```terminal
-    ~ $ /removedebt auth last 2 features
+    > /removedebt auth last 2 features
     ⟩ found 3 concrete, filtered 8 speculative
     ⟩ snapshot: 47 tests ✓
     ⟩ executing... 47/47 ✓ per item
