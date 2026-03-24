@@ -1,0 +1,78 @@
+<section id="quick-start" class="quick-start">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">Quick Start</span>
+      <h2 class="section-title">Three commands. Zero config.</h2>
+      <p class="section-subtitle">Install, deliver, consolidate. That's the whole workflow.</p>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        <span class="label">01 — install</span>
+        <div class="command"><span class="prompt">&gt;</span> /plugin install hgrafa/hypership</div>
+        <p class="column-desc">Reads your CLAUDE.md. Adapts to your stack. Done.</p>
+      </div>
+      <div class="column">
+        <span class="label">02 — deliver</span>
+        <div class="command"><span class="prompt">&gt;</span> /delivery add roles to auth</div>
+        <p class="column-desc">Classifies, plans, tests, ships. Your plugins, your pipeline.</p>
+      </div>
+      <div class="column">
+        <span class="label">03 — consolidate</span>
+        <div class="command"><span class="prompt">&gt;</span> /removedebt last 3 features</div>
+        <p class="column-desc">Scans real debt. You decide. Safety gates protect you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .quick-start {
+    padding: var(--section-gap) 0;
+    border-top: 1px solid var(--border);
+  }
+  .section-header {
+    margin-bottom: var(--space-3);
+  }
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-top: var(--space-1);
+  }
+  .section-subtitle {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin-top: var(--space-1);
+  }
+  .columns {
+    display: flex;
+    gap: var(--column-gap);
+    margin-top: var(--space-3);
+  }
+  .column {
+    flex: 1;
+    background: var(--surface);
+    padding: var(--space-2);
+    border-left: 2px solid var(--border-strong);
+  }
+  .command {
+    background: var(--surface-hover);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-code);
+    margin-top: var(--space-1);
+  }
+  .prompt {
+    color: var(--text-accent);
+  }
+  .column-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: var(--space-1);
+  }
+  @media (max-width: 768px) {
+    .columns {
+      flex-direction: column;
+    }
+  }
+</style>

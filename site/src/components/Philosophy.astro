@@ -1,0 +1,61 @@
+<section class="philosophy">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">Philosophy</span>
+      <h2 class="section-title">A delivery-first methodology.</h2>
+    </div>
+
+    <div class="principles">
+      <div class="principle">
+        <h3 class="principle-title">Features and debt are separate.</h3>
+        <p class="principle-desc">Don't refactor during feature delivery. Ship first, consolidate deliberately.</p>
+      </div>
+      <div class="principle">
+        <h3 class="principle-title">Debt is concrete, not speculative.</h3>
+        <p class="principle-desc">Grep-able duplication, actual unused code. Not "could be more generic."</p>
+      </div>
+      <div class="principle">
+        <h3 class="principle-title">Senior engineers decide.</h3>
+        <p class="principle-desc">Tool proposes, you dispose. Every finding has a skip option.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    padding: var(--section-gap) 0;
+    border-top: 1px solid var(--border);
+  }
+  .section-header {
+    margin-bottom: var(--space-3);
+  }
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-top: var(--space-1);
+  }
+  .principles {
+    display: flex;
+    gap: var(--column-gap);
+  }
+  .principle {
+    flex: 1;
+  }
+  .principle-title {
+    font-size: var(--text-md);
+    font-weight: 600;
+  }
+  .principle-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-top: var(--space-1);
+  }
+  @media (max-width: 768px) {
+    .principles {
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+  }
+</style>
