@@ -1,0 +1,54 @@
+<div class="tabs">
+  <button class="tab tab-ootb" data-tab="ootb">out-of-the-box</button>
+  <button class="tab tab-nerd" data-tab="nerd">im-a-nerd</button>
+</div>
+
+<script is:inline>
+(function() {
+  function setMode(mode) {
+    document.documentElement.setAttribute('data-mode', mode);
+    localStorage.setItem('hs-mode', mode);
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.tab === mode);
+    });
+  }
+
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      setMode(t.dataset.tab);
+    });
+  });
+
+  // Initialize from localStorage or default
+  var saved = localStorage.getItem('hs-mode') || 'ootb';
+  setMode(saved);
+})();
+</script>
+
+<style>
+  .tabs {
+    display: flex;
+    border-bottom: 1.5px solid var(--border);
+    gap: 0;
+    margin-top: var(--space-3);
+  }
+  .tab {
+    background: none;
+    border: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--text-accent);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+  }
+  .tab.active {
+    color: var(--text-primary);
+    font-weight: 600;
+    border-bottom-color: var(--text-primary);
+  }
+  .tab:hover:not(.active) {
+    color: var(--text-secondary);
+  }
+</style>

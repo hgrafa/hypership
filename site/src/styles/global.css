@@ -82,3 +82,18 @@ a:hover {
     --text-xl: 1.5rem;
   }
 }
+
+/* Mode visibility: controlled by data-mode on <html> */
+html:not([data-mode="nerd"]) .mode-nerd,
+html[data-mode="ootb"] .mode-nerd {
+  display: none !important;
+}
+
+html[data-mode="nerd"] .mode-ootb {
+  display: none !important;
+}
+
+/* Default: show ootb, hide nerd (no-JS fallback) */
+.mode-nerd {
+  display: none;
+}

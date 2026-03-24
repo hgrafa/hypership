@@ -1,0 +1,110 @@
+---
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ModeTabs from '../components/ModeTabs.astro';
+
+interface Props {
+  frontmatter: {
+    number: string;
+    title: string;
+    subtitle: string;
+    scenario: string;
+    next?: { slug: string; title: string };
+    prev?: { slug: string; title: string };
+  };
+}
+
+const { frontmatter } = Astro.props;
+const { number, title, subtitle, scenario, next, prev } = frontmatter;
+---
+
+<Base title={`${title} — Hypership`} description={subtitle}>
+  <Nav breadcrumb={`use cases / ${title.toLowerCase()}`} />
+
+  <main class="container usecase-page">
+    <header class="usecase-header">
+      <span class="label">Use Case {number}</span>
+      <h1 class="usecase-title">{title}</h1>
+      <p class="usecase-subtitle">{subtitle}</p>
+    </header>
+
+    <ModeTabs />
+
+    <div class="usecase-scenario">
+      <span class="label">The scenario</span>
+      <p class="scenario-text">{scenario}</p>
+    </div>
+
+    <div class="usecase-content">
+      <slot />
+    </div>
+
+    <nav class="usecase-nav">
+      <div class="nav-prev">
+        {prev ? (
+          <a href={`/cases/${prev.slug}/`}>← {prev.title}</a>
+        ) : (
+          <a href="/#use-cases">← all cases</a>
+        )}
+      </div>
+      <div class="nav-next">
+        {next ? (
+          <a href={`/cases/${next.slug}/`}>next: {next.title} →</a>
+        ) : (
+          <a href="/#use-cases">all cases →</a>
+        )}
+      </div>
+    </nav>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .usecase-page {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+  }
+  .usecase-title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: var(--space-1);
+  }
+  .usecase-subtitle {
+    font-size: var(--text-md);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: var(--space-1);
+  }
+  .usecase-scenario {
+    background: var(--surface);
+    padding: var(--space-2);
+    border-left: 2px solid var(--border-strong);
+    margin-top: var(--space-4);
+  }
+  .scenario-text {
+    font-size: var(--text-base);
+    line-height: 1.7;
+    margin-top: var(--space-1);
+  }
+  .usecase-content {
+    margin-top: var(--space-4);
+  }
+  .usecase-nav {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .usecase-nav a {
+    font-size: var(--text-sm);
+    color: var(--text-accent);
+  }
+  .nav-next a {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+</style>
