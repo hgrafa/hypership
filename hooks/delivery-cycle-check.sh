@@ -11,7 +11,7 @@ echo "$LAST_COMMIT_MSG" | grep -q "^[a-f0-9]* feat:" || exit 0
 
 # Find last removedebt date
 if [ -f "$DEBT_LOG" ]; then
-    LAST_DATE=$(grep -oP '## \[\K[0-9]{4}-[0-9]{2}-[0-9]{2}' "$DEBT_LOG" | tail -1)
+    LAST_DATE=$(grep '## \[' "$DEBT_LOG" | sed 's/.*## \[\([0-9-]*\).*/\1/' | tail -1)
     if [ -n "$LAST_DATE" ]; then
         FEAT_COUNT=$(cd "$CLAUDE_PROJECT_DIR" && git log --oneline --after="$LAST_DATE" --grep="^feat:" | wc -l)
     else
