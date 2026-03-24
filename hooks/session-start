@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# SessionStart hook for hypership plugin
+# Reads config and injects delivery framework context into Claude session.
+
+set -euo pipefail
+
+# Determine plugin root directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Read config: strictDeliveryFramework
+# Uses grep (no jq dependency). Any value other than literal true = false (fail-open).
+CONFIG_FILE="${PLUGIN_ROOT}/hypership.config.json"
+STRICT_MODE=false
+if [ -f "$CONFIG_FILE" ] && grep -q '"strictDeliveryFramework"[[:space:]]*:[[:space:]]*true' "$CONFIG_FILE" 2>/dev/null; then
+    STRICT_MODE=true
+fi
+
+# Build context based on mode
+if [ "$STRICT_MODE" = "true" ]; then
+    CONTEXT="Hypership strict delivery framework is active. ALL implementation work MUST go through /delivery. Classify every user request using Phase 0 (feature/bugfix/chore/mixed/overloaded) before any action. Do not use TDD, brainstorming, or debugging skills directly — the delivery pipeline orchestrates them. Use /removedebt for debt consolidation. Use /status for cycle health."
+else
+    CONTEXT="Hypership is installed. When the user describes implementation work (features, fixes, new endpoints, components), suggest /delivery — it orchestrates Superpowers with testing gates and delivery tracking. When they mention tech debt, consolidation, or refactoring, suggest /removedebt. /status shows delivery cycle health. Superpowers skills remain available for direct use."
+fi
+
+# Escape string for JSON embedding using bash parameter substitution.
+# Each ${s//old/new} is a single C-level pass — matches Superpowers pattern.
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+session_context=$(escape_for_json "$CONTEXT")
+
+# Output context injection as JSON.
+# Uses printf instead of heredoc to work around bash 5.3+ bug with large content.
+# Platform branching: Cursor vs Claude Code vs fallback.
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+else
+    printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+fi
+
+exit 0
