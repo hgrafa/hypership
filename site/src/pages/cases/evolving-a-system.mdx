@@ -1,0 +1,82 @@
+---
+layout: ../../layouts/Usecase.astro
+number: "01"
+title: "Evolving a system"
+subtitle: "Auth → roles → claims → granular permissions. How iterative delivery builds complex systems one layer at a time."
+scenario: "You have a working auth system. Now the product needs roles, then claims, then granular permissions. Each layer depends on the previous one. How do you deliver iteratively without the codebase turning into a mess?"
+next: { slug: "debt-after-a-sprint", title: "Debt after a sprint" }
+prev: null
+---
+
+import Dialogue from '../../components/Dialogue.astro';
+import Msg from '../../components/DialogueMessage.astro';
+import SplitView from '../../components/SplitView.astro';
+import FlowStep from '../../components/FlowStep.astro';
+import CodeStep from '../../components/CodeStep.astro';
+import Tension from '../../components/Tension.astro';
+import TerminalBlock from '../../components/TerminalBlock.astro';
+
+<Dialogue>
+  <Msg from="you">/delivery add role-based access to auth</Msg>
+  <Msg from="hs" tags={["brainstorm ✓", "plan ✓", "TDD ✓", "gate ✓"]}>
+    Classified as **feature**. Using Superpowers pipeline.
+    Brainstormed scope, wrote plan with 3 tasks, implemented with TDD.
+    Acceptance gate: 3/3 criteria covered.
+  </Msg>
+  <Msg from="you">/delivery add claims and granular permissions</Msg>
+  <Msg from="hs" tags={["builds on step 1", "fresh context"]}>
+    Builds on roles layer. Fresh brainstorm, 5 tasks planned.
+    Delivered — tagged delivery/claims-v1.
+  </Msg>
+  <Msg from="you">/removedebt auth last 2 features</Msg>
+  <Msg from="hs" tags={["3 findings", "safety gates ✓"]}>
+    Found 3 real items, filtered 8 speculative. Safety gates active.
+    3/3 consolidated — 47/47 tests, zero regressions.
+  </Msg>
+</Dialogue>
+
+<SplitView>
+  <FlowStep title="First delivery">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /delivery add role-based access to auth</div>
+      <div class="dim">⟩ classified: <span class="value">feature</span></div>
+      <div class="dim">⟩ pipeline: <span class="value">superpowers</span></div>
+      <div class="dim">⟩ brainstorm → plan → TDD</div>
+      <div class="success">✓ delivered</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Clean code" annotation="clean, focused, tested ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// auth/roles.ts</span>\n<span style="color: var(--code-keyword)">function</span> checkRole(user, role) {\n  <span style="color: var(--code-keyword)">return</span> user.roles.includes(role)\n}</code></pre>`} />
+  </CodeStep>
+
+  <FlowStep title="Second delivery">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /delivery add claims and granular permissions</div>
+      <div class="dim">⟩ classified: <span class="value">feature</span></div>
+      <div class="dim">⟩ 5 tasks planned</div>
+      <div class="success">✓ delivered</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Duplication creeping in" annotation="duplication creeping in — shipped fast, works, but..." mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// auth/permissions.ts</span>\n<span style="color: var(--code-keyword)">function</span> checkPermission(user, perm) {\n  <span style="color: var(--code-keyword)">const</span> role = getUserRole(user) <span style="color: var(--warning)">// ← duplicates checkRole logic</span>\n  <span style="color: var(--code-keyword)">return</span> claims[role]?.includes(perm)\n}</code></pre>`} />
+  </CodeStep>
+
+  <Tension left="discipline" right="reality" />
+
+  <FlowStep title="Consolidation">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /removedebt auth last 2 features</div>
+      <div class="dim">⟩ scanning 14 files...</div>
+      <div class="dim">⟩ found <span class="value">3</span> concrete, filtered <span style="color: #636158">8 speculative</span></div>
+      <div class="dim">⟩ snapshot: <span class="success">47 tests ✓</span></div>
+      <div class="dim">⟩ executing...</div>
+      <div class="dim">⟩ item 1: <span class="success">47/47 ✓</span></div>
+      <div class="dim">⟩ item 2: <span class="success">47/47 ✓</span></div>
+      <div class="dim">⟩ item 3: <span class="success">47/47 ✓</span></div>
+      <div class="success">✓ consolidated — zero regressions</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Unified" annotation="clean, unified, zero duplication ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// auth/access.ts</span> <span style="color: var(--success)">← unified</span>\n<span style="color: var(--code-keyword)">function</span> checkAccess(user, requirement) {\n  <span style="color: var(--code-keyword)">if</span> (requirement.type === <span style="color: var(--code-string)">'role'</span>)\n    <span style="color: var(--code-keyword)">return</span> user.roles.includes(requirement.value)\n  <span style="color: var(--code-keyword)">if</span> (requirement.type === <span style="color: var(--code-string)">'permission'</span>)\n    <span style="color: var(--code-keyword)">return</span> resolveClaims(user).has(requirement.value)\n}</code></pre>`} />
+  </CodeStep>
+</SplitView>
