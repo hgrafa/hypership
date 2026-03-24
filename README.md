@@ -1,136 +1,109 @@
 # Hypership
 
-AI-first delivery and tech debt management for senior engineering teams.
+> Ship features with testing gates. Consolidate debt with safety nets.
 
-Two commands. One philosophy: **deliver fast, consolidate deliberately.**
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-green.svg)
+![Requires: Superpowers](https://img.shields.io/badge/Requires-Superpowers-purple.svg)
 
-## Commands
+AI-first delivery framework for senior engineering teams.
+Two commands. One philosophy: **obsessively ship, deliberately consolidate.**
 
-### `/delivery [description]`
+---
 
-Orchestrates feature implementation. Chooses between Superpowers
-pipeline (interactive, two-stage review) or Ralph Loop (autonomous,
-PRD-driven) based on task characteristics. Asks you when both fit.
+## Why Hypership
 
-```
-/delivery implement the refund flow for Stripe and PayPal
-/delivery fix the race condition in checkout queue
-/delivery migrate user preferences from localStorage to API
-```
+Every feature you ship accumulates debt. Every debt removal risks breaking what you shipped. Hypership solves both sides:
 
-What happens:
-1. Evaluates task → picks Superpowers or Ralph
-2. Brainstorms to refine requirements (even for "simple" tasks)
-3. Generates granular plan with exact file paths
-4. Implements via subagents with TDD
-5. Two-stage review: spec compliance + code quality
-6. Finishes branch, logs delivery, checks debt cycle
+- **`/delivery`** — classifies your work (feature, bugfix, chore, mixed), applies testing gates, orchestrates Superpowers or Ralph Loop, logs everything
+- **`/removedebt`** — scopes debt via git history, presents findings with strategic questions, executes with safety gates (snapshot, escape hatch, hard stop)
 
-### `/removedebt [context]`
+You decide what to cut. Hypership executes with guardrails.
 
-Analyzes accumulated tech debt from recent deliveries. Scopes analysis
-by your context argument — time range, feature set, or module.
+## Quick Start
 
-```
-/removedebt the last 3 features about payment methods
-/removedebt after v2.0 release until now
-/removedebt everything on the checkout module
-/removedebt since last consolidation
-/removedebt                              # = since last /removedebt
-```
-
-What happens:
-1. Resolves your context to a git range
-2. Dispatches debt-scanner agent on the diff
-3. Classifies findings: duplication, dead code, naming drift, type sprawl, missing tests, stale imports
-4. Filters out non-debt (YAGNI, premature optimization, preferences)
-5. Presents findings with strategic questions (max 5 decision points)
-6. You decide what to address, skip, or handle manually
-7. Executes approved items via Superpowers pipeline
-8. Logs everything to `docs/debt-log.md`
-
-### `/status`
-
-Shows current delivery cycle health: features since last debt removal,
-recent deliveries, pending plans.
-
-## Philosophy
-
-- **Features and debt removal are separate activities.** Don't refactor
-  during feature delivery. Don't add features during debt removal.
-- **Debt is concrete, not speculative.** Duplication you can grep for.
-  Dead code with zero imports. Not "could be more generic."
-- **Senior engineers decide.** The tool proposes, you dispose. Every
-  finding comes with "skip" as a valid option.
-- **Superpowers is the quality backbone.** Both delivery and debt
-  removal run through the full pipeline: brainstorm → plan → TDD →
-  subagent-driven-development → two-stage review.
-
-## Prerequisites
-
-- [Claude Code](https://code.claude.com) with plugin support
-- [Superpowers](https://github.com/obra/superpowers) plugin installed
-- (Optional) [Ralph Loop](https://github.com/snarktank/ralph) for autonomous mode
-
-## Recommended Companions
-
-These are NOT dependencies — the plugin works 100% without them.
-But when present, it detects and uses them automatically.
-
-| Plugin/MCP | What it adds | Install |
-|---|---|---|
-| **Context7** | Docs lookup during implementation — fewer API mistakes | `claude mcp add context7 -- npx -y @upstreamapi/context7-mcp` |
-| **GitHub MCP** | Auto-fetch issues, auto-create PRs | `claude mcp add github -- npx -y @anthropic-ai/github-mcp-server` |
-| **claude-mem** | Rich persistent memory with AI compression across sessions | `/plugin marketplace add thedotmack/claude-mem` then `/plugin install claude-mem` |
-| **memsearch** | Lightweight persistent memory, markdown-based, vector search | `/plugin marketplace add zilliztech/memsearch` then `/plugin install memsearch` |
-| **Ralph Loop** | AFK autonomous delivery mode | `/plugin install ralph-loop` |
-
-**On memory:** You don't need all memory options. Claude Code already has
-built-in auto memory (v2.1.59+). Pick ONE if you want more:
-- **claude-mem** for deep, compressed memory across long projects (adds ~60-90s latency per tool call)
-- **memsearch** for lightweight, fast, markdown-based memory (minimal latency)
-- **Neither** if built-in auto memory is enough for your workflow
-
-The plugin auto-detects whichever memory system is present and uses it.
-
-## Installation
+### 1. Install
 
 ```bash
-# Install Superpowers first (dependency)
-/plugin marketplace add obra/superpowers-marketplace
-/plugin install superpowers@superpowers-marketplace
-
-# Install hypership
 /plugin install hgrafa/hypership
 ```
 
-## Project Setup
+Superpowers installs automatically as a dependency.
 
-The plugin creates these files as needed:
+### 2. Ship something
 
 ```
-docs/
-├── plans/            # Superpowers plans (auto-managed)
-├── delivery-log.md   # Feature delivery history
-└── debt-log.md       # Debt removal history
+/delivery add Stripe refund flow with webhook handling
 ```
 
-Add to your `.claude/settings.json`:
+Hypership classifies your request, selects the right pipeline, implements with testing gates, and logs the delivery.
 
-```json
-{
-  "plansDirectory": "./docs/plans"
-}
+### 3. Consolidate
+
 ```
+/removedebt since last consolidation
+```
+
+Scans the git diff, finds real debt, asks you what to fix, and executes with safety nets.
+
+## Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/delivery [description]` | Orchestrate feature/bugfix delivery with testing gates |
+| `/removedebt [context]` | Analyze and remove tech debt with safety gates |
+| `/status` | Show delivery cycle health |
+
+## Testing Gates (`/delivery`)
+
+| Type | Gate | Enforces |
+|------|------|----------|
+| Bugfix | Bug-as-Test | Reproduce bug as failing test before fixing |
+| Feature | Acceptance Coverage | Tests map 1:1 to acceptance criteria from brainstorm |
+| Chore | TDD only | Standard Superpowers TDD, no extra gates |
+| Mixed | Per-item | Decomposes prompt, each item gets its type-appropriate gate |
+
+Non-reproducible bugs don't block — they get 3 fallback strategies (defense-in-depth, observability, hypothesis-driven hardening).
+
+## Safety Gates (`/removedebt`)
+
+| Gate | When | What |
+|------|------|------|
+| Snapshot | Before execution | Captures full test baseline (pass/fail/skip/coverage) |
+| Escape Hatch | After snapshot | Declare which tests may break intentionally (immutable once execution starts) |
+| Hard Stop | After each category | Blocks on unexpected test failures with options: revert, investigate, or continue |
 
 ## Configuration
 
-The plugin reads your `CLAUDE.md` for:
-- Test command (to run after refactors)
-- Build command (to verify nothing broke)
-- Code conventions (passed to subagents)
+Create or edit `hypership.config.json` in the plugin root:
 
-No additional configuration needed. The skills activate automatically.
+```json
+{
+  "strictDeliveryFramework": false
+}
+```
+
+| Setting | Default | Effect |
+|---------|---------|--------|
+| `strictDeliveryFramework` | `false` | When `true`, ALL implementation work must go through `/delivery`. No direct Superpowers bypass. |
+
+## Philosophy
+
+- Features and debt removal are **separate activities**
+- Debt is **concrete** (detectable via grep), not speculative
+- Senior engineers **decide** — tool proposes, you dispose
+- **No bugfix without evidence** — reproduce first, harden if you can't
+- **No refactor without safety net** — snapshot, declare breaks, hard stop on surprises
+
+## Stack
+
+**Required:**
+- [Superpowers](https://github.com/obra/superpowers) — quality backbone (TDD, debugging, code review, planning)
+
+**Optional companions** (auto-detected when present):
+- [Ralph Loop](https://github.com/snarktank/ralph) — AFK autonomous delivery mode
+- [Context7](https://github.com/upstreamapi/context7) — docs lookup during implementation
+- GitHub MCP — auto-fetch issues, auto-create PRs
 
 ## License
 
