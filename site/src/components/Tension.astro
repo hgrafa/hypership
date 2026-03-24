@@ -1,0 +1,41 @@
+---
+interface Props {
+  left?: string;
+  right?: string;
+}
+const { left = 'discipline', right = 'reality' } = Astro.props;
+---
+
+<div class="tension">
+  <span class="tension-side tension-left">← {left}</span>
+  <span class="tension-center">the tension is the point</span>
+  <span class="tension-side tension-right">{right} →</span>
+</div>
+
+<style>
+  .tension {
+    background: var(--surface-hover);
+    padding: var(--space-1) var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+  .tension-side {
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+  .tension-left {
+    color: var(--text-accent);
+    text-align: center;
+  }
+  .tension-right {
+    color: var(--warning);
+    text-align: center;
+  }
+  .tension-center {
+    font-size: var(--text-base);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+</style>

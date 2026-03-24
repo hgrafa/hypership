@@ -1,0 +1,59 @@
+---
+interface Props {
+  title?: string;
+  annotation?: string;
+  mood?: 'clean' | 'debt';
+}
+const { title, annotation, mood = 'clean' } = Astro.props;
+---
+
+<div class="code-step">
+  {title && <div class="code-title">{title}</div>}
+  <div class="code-block">
+    <slot />
+  </div>
+  {annotation && (
+    <div class:list={['annotation', `annotation-${mood}`]}>
+      {annotation}
+    </div>
+  )}
+</div>
+
+<style>
+  .code-step {
+    margin-bottom: var(--space-2);
+  }
+  .code-title {
+    font-size: var(--text-xs);
+    color: var(--text-accent);
+    margin-bottom: var(--space-1);
+  }
+  .code-block {
+    background: var(--terminal-bg);
+    border-radius: 4px;
+    padding: var(--space-2);
+    font-size: var(--text-code);
+    line-height: 1.9;
+    color: #dddad2;
+    overflow-x: auto;
+  }
+  .code-block :global(pre) {
+    margin: 0;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  .code-block :global(code) {
+    font-family: var(--font-mono);
+    font-size: var(--text-code);
+  }
+  .annotation {
+    font-size: var(--text-xs);
+    margin-top: 0.25rem;
+  }
+  .annotation-clean {
+    color: var(--success);
+  }
+  .annotation-debt {
+    color: var(--warning);
+  }
+</style>
