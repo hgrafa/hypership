@@ -1,0 +1,63 @@
+:root {
+  /* Light mode — colors */
+  --bg: #f5f0e8;
+  --text-primary: #2c2418;
+  --text-secondary: #6b5d4f;
+  --text-accent: #8a7a65;
+  --surface: rgba(44, 36, 24, 0.04);
+  --surface-hover: rgba(44, 36, 24, 0.06);
+  --border: rgba(138, 122, 101, 0.12);
+  --border-strong: rgba(138, 122, 101, 0.25);
+  --success: #9a8a6e;
+  --warning: #966b5a;
+  --terminal-bg: #1b1b1c;
+
+  /* Light mode — code syntax */
+  --code-keyword: #6b4423;
+  --code-string: #4a6b2a;
+  --code-comment: #8a7a65;
+
+  /* Typography (rem-based, 16px root) */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-hero: 2.25rem;
+  --text-code: 0.875rem;
+
+  /* Spacing scale (8px base) */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+
+  /* Layout */
+  --content-max-width: 960px;
+  --content-padding: var(--space-4);
+  --section-gap: var(--space-5);
+  --grid-gap: var(--space-2);
+  --column-gap: var(--space-3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1b1c;
+    --text-primary: #dddad2;
+    --text-secondary: #94918a;
+    --text-accent: #8e8b80;
+    --surface: rgba(220, 210, 195, 0.04);
+    --surface-hover: rgba(220, 210, 195, 0.06);
+    --border: rgba(108, 108, 98, 0.05);
+    --border-strong: rgba(130, 135, 145, 0.10);
+    --terminal-bg: #141415;
+
+    --code-keyword: #c8a87a;
+    --code-string: #a8c878;
+    --code-comment: #636158;
+  }
+}
