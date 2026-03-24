@@ -1,8 +1,14 @@
 ---
-import Base from '../layouts/Base.astro';
+import Landing from '../layouts/Landing.astro';
+import Hero from '../components/Hero.astro';
+import QuickStart from '../components/QuickStart.astro';
+import Philosophy from '../components/Philosophy.astro';
+import UsecaseGrid from '../components/UsecaseGrid.astro';
 ---
-<Base title="Hypership — delivery-obsessed engineering">
-  <main class="container">
-    <p>Scaffold works.</p>
-  </main>
-</Base>
+
+<Landing title="Hypership — delivery-obsessed engineering">
+  <Hero />
+  <QuickStart />
+  <Philosophy />
+  <UsecaseGrid />
+</Landing>

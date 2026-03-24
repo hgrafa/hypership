@@ -1,0 +1,89 @@
+---
+const cases = [
+  { num: '01', title: 'Evolving a system', desc: 'Auth → roles → claims → granular permissions. Iterative delivery building layer by layer.', slug: 'evolving-a-system' },
+  { num: '02', title: 'Debt after a sprint', desc: '6 features shipped, code feels heavy. Scan, filter noise, execute with safety nets.', slug: 'debt-after-a-sprint' },
+  { num: '03', title: 'Production fire', desc: 'Duplicate payments. Bug-as-test gate: reproduce first, then fix. No guessing.', slug: 'production-fire' },
+  { num: '04', title: 'Cycle visibility', desc: 'Tech lead wants to see the rhythm. /status shows health, signals when to consolidate.', slug: 'cycle-visibility' },
+  { num: '05', title: 'Legacy without fear', desc: 'Inherited monolith. Module-scoped cleanup with snapshot, escape hatch, hard stop.', slug: 'legacy-without-fear' },
+];
+---
+
+<section id="use-cases" class="usecases">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">Use Cases</span>
+      <h2 class="section-title">See it in action.</h2>
+      <p class="section-subtitle">Real scenarios, real workflows. Each one has a visual walkthrough and a terminal deep-dive.</p>
+    </div>
+
+    <div class="grid">
+      {cases.map((c) => (
+        <a href={`/cases/${c.slug}/`} class="card">
+          <span class="label">{c.num}</span>
+          <h3 class="card-title">{c.title}</h3>
+          <p class="card-desc">{c.desc}</p>
+          <span class="card-link">VIEW CASE →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .usecases {
+    padding: var(--section-gap) 0;
+    border-top: 1px solid var(--border);
+  }
+  .section-header {
+    margin-bottom: var(--space-3);
+  }
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-top: var(--space-1);
+  }
+  .section-subtitle {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin-top: var(--space-1);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gap);
+    margin-top: var(--space-3);
+  }
+  .card {
+    display: block;
+    background: var(--surface);
+    padding: var(--space-2);
+    transition: background 0.15s;
+  }
+  .card:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+  .card-title {
+    font-size: var(--text-md);
+    font-weight: 600;
+    margin-top: var(--space-1);
+  }
+  .card-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: var(--space-1);
+  }
+  .card-link {
+    display: inline-block;
+    font-size: var(--text-xs);
+    color: var(--text-accent);
+    letter-spacing: 1px;
+    margin-top: var(--space-1);
+  }
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
