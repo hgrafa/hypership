@@ -1,0 +1,75 @@
+---
+layout: ../../layouts/Usecase.astro
+number: "04"
+title: "Cycle visibility"
+subtitle: "Tech lead wants to see the rhythm. /status shows health, signals when to consolidate."
+scenario: "You're leading a team of 4 engineers. Features are shipping, but you've lost track of when you last consolidated. Are you accumulating hidden debt? How do you know when to pause and clean up?"
+prev: { slug: "production-fire", title: "Production fire" }
+next: { slug: "legacy-without-fear", title: "Legacy without fear" }
+---
+
+import Dialogue from '../../components/Dialogue.astro';
+import Msg from '../../components/DialogueMessage.astro';
+import SplitView from '../../components/SplitView.astro';
+import FlowStep from '../../components/FlowStep.astro';
+import CodeStep from '../../components/CodeStep.astro';
+import Tension from '../../components/Tension.astro';
+import TerminalBlock from '../../components/TerminalBlock.astro';
+
+<Dialogue>
+  <Msg from="you">/status</Msg>
+  <Msg from="hs" tags={["8 features", "0 consolidations", "RED"]}>
+    8 features delivered, 0 consolidations.
+    Health: **RED** — you're deep in delivery-only mode.
+    Recommend running `/removedebt` before the next feature.
+  </Msg>
+  <Msg from="you">Didn't realize it had been that long. Let's clean up.</Msg>
+  <Msg from="hs" tags={["suggestion"]}>
+    Run `/removedebt` scoped to recent features.
+    After consolidation, `/status` will update automatically.
+  </Msg>
+  <Msg from="you">/removedebt last 8 features</Msg>
+  <Msg from="hs" tags={["4 findings", "safety gates ✓", "done"]}>
+    Found 4 concrete items, filtered 9 speculative.
+    4/4 consolidated — 62/62 tests passing. Zero regressions.
+  </Msg>
+  <Msg from="you">/status</Msg>
+  <Msg from="hs" tags={["healthy", "GREEN"]}>
+    8 features, 1 consolidation. Ratio restored.
+    Health: **GREEN** — cadence is healthy.
+  </Msg>
+</Dialogue>
+
+<SplitView>
+  <FlowStep title="Status: overdue">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /status</div>
+      <div class="dim">⟩ features since last consolidation: <span class="value">8</span></div>
+      <div class="dim">⟩ consolidations: <span class="value">0</span></div>
+      <div class="dim">⟩ health: <span style="color: var(--error)">RED</span></div>
+      <div class="dim">⟩ recommendation: <span style="color: var(--warning)">consolidate now</span></div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="delivery-log.md" annotation="8 deliveries, no consolidation entries — imbalanced" mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)"># delivery-log.md</span>\n- delivery/user-profiles-v1\n- delivery/search-filters-v1\n- delivery/notification-prefs-v1\n- delivery/export-csv-v1\n- delivery/bulk-actions-v1\n- delivery/audit-trail-v1\n- delivery/api-keys-v1\n- delivery/webhook-config-v1\n\n<span style="color: var(--code-comment)"># debt-log.md</span>\n<span style="color: var(--warning)">← empty — no consolidations recorded</span></code></pre>`} />
+  </CodeStep>
+
+  <Tension left="shipping" right="sustainability" />
+
+  <FlowStep title="Status: healthy">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /removedebt last 8 features</div>
+      <div class="dim">⟩ found <span class="value">4</span> concrete, filtered <span style="color: #636158">9 speculative</span></div>
+      <div class="dim">⟩ 4/4 consolidated: <span class="success">62/62 ✓</span></div>
+      <div class="success">✓ consolidated</div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">&gt;</span> /status</div>
+      <div class="dim">⟩ features since last consolidation: <span class="value">8</span></div>
+      <div class="dim">⟩ consolidations: <span class="value">1</span></div>
+      <div class="dim">⟩ health: <span class="success">GREEN</span></div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Logs after consolidation" annotation="cadence restored — delivery and consolidation in rhythm ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)"># delivery-log.md</span>\n- delivery/user-profiles-v1\n- delivery/search-filters-v1\n- delivery/notification-prefs-v1\n  <span style="color: var(--code-comment)">...5 more</span>\n\n<span style="color: var(--code-comment)"># debt-log.md</span> <span style="color: var(--success)">← populated</span>\n- consolidation/duplicated-validators\n- consolidation/inconsistent-error-formats\n- consolidation/dead-imports-cleanup\n- consolidation/shared-config-extract</code></pre>`} />
+  </CodeStep>
+</SplitView>

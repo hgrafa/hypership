@@ -1,0 +1,76 @@
+---
+layout: ../../layouts/Usecase.astro
+number: "02"
+title: "Debt after a sprint"
+subtitle: "6 features shipped, code feels heavy. Scan, filter noise, execute with safety nets."
+scenario: "You've been shipping fast — 6 features in two weeks. The code works, the tests pass, but you can feel the weight. Duplicated utilities, inconsistent naming, a helper that got copy-pasted three times. Time to consolidate."
+prev: { slug: "evolving-a-system", title: "Evolving a system" }
+next: { slug: "production-fire", title: "Production fire" }
+---
+
+import Dialogue from '../../components/Dialogue.astro';
+import Msg from '../../components/DialogueMessage.astro';
+import SplitView from '../../components/SplitView.astro';
+import FlowStep from '../../components/FlowStep.astro';
+import CodeStep from '../../components/CodeStep.astro';
+import Tension from '../../components/Tension.astro';
+import TerminalBlock from '../../components/TerminalBlock.astro';
+
+<Dialogue>
+  <Msg from="you">/status</Msg>
+  <Msg from="hs" tags={["6 features", "0 consolidations"]}>
+    6 features delivered since last consolidation.
+    Health: **RED** — consolidation overdue.
+  </Msg>
+  <Msg from="you">That explains the weight. What should I do?</Msg>
+  <Msg from="hs" tags={["suggestion"]}>
+    Run `/removedebt` scoped to recent work.
+    It will scan, filter noise, and let you pick what to fix.
+  </Msg>
+  <Msg from="you">/removedebt last 6 features</Msg>
+  <Msg from="hs" tags={["scan ✓", "filter ✓", "safety gates ✓"]}>
+    Scanned 23 files across 6 features.
+    Found **5 concrete** items, filtered 12 speculative.
+    Ready when you are.
+  </Msg>
+  <Msg from="you">select all</Msg>
+  <Msg from="hs" tags={["5/5 done", "89/89 tests ✓"]}>
+    Executing with safety gates — snapshot locked at 89 tests.
+    5/5 items consolidated. 89/89 passing. Zero regressions.
+  </Msg>
+</Dialogue>
+
+<SplitView>
+  <FlowStep title="Status check">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /status</div>
+      <div class="dim">⟩ features since last consolidation: <span class="value">6</span></div>
+      <div class="dim">⟩ consolidations: <span class="value">0</span></div>
+      <div class="dim">⟩ health: <span style="color: var(--error)">RED</span></div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Copy-pasted helpers" annotation="same formatDate in 3 files — shipped fast, works, but..." mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// features/billing/utils.ts</span>\n<span style="color: var(--code-keyword)">function</span> formatDate(d) {\n  <span style="color: var(--code-keyword)">return</span> d.toISOString().split(<span style="color: var(--code-string)">'T'</span>)[0]\n}\n\n<span style="color: var(--code-comment)">// features/reports/helpers.ts</span> <span style="color: var(--warning)">← duplicate</span>\n<span style="color: var(--code-keyword)">function</span> formatDate(d) {\n  <span style="color: var(--code-keyword)">return</span> d.toISOString().split(<span style="color: var(--code-string)">'T'</span>)[0]\n}\n\n<span style="color: var(--code-comment)">// features/dashboard/format.ts</span> <span style="color: var(--warning)">← duplicate</span>\n<span style="color: var(--code-keyword)">function</span> formatDate(d) {\n  <span style="color: var(--code-keyword)">return</span> d.toISOString().split(<span style="color: var(--code-string)">'T'</span>)[0]\n}</code></pre>`} />
+  </CodeStep>
+
+  <Tension left="velocity" right="duplication" />
+
+  <FlowStep title="Consolidation">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /removedebt last 6 features</div>
+      <div class="dim">⟩ scanning 23 files...</div>
+      <div class="dim">⟩ found <span class="value">5</span> concrete, filtered <span style="color: #636158">12 speculative</span></div>
+      <div class="dim">⟩ snapshot: <span class="success">89 tests ✓</span></div>
+      <div class="dim">⟩ executing...</div>
+      <div class="dim">⟩ item 1: <span class="success">89/89 ✓</span></div>
+      <div class="dim">⟩ item 2: <span class="success">89/89 ✓</span></div>
+      <div class="dim">⟩ item 3: <span class="success">89/89 ✓</span></div>
+      <div class="dim">⟩ item 4: <span class="success">89/89 ✓</span></div>
+      <div class="dim">⟩ item 5: <span class="success">89/89 ✓</span></div>
+      <div class="success">✓ consolidated — zero regressions</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Single source of truth" annotation="one formatDate, three importers, zero duplication ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// utils/date.ts</span> <span style="color: var(--success)">← consolidated</span>\n<span style="color: var(--code-keyword)">export function</span> formatDate(d: Date): <span style="color: var(--code-keyword)">string</span> {\n  <span style="color: var(--code-keyword)">return</span> d.toISOString().split(<span style="color: var(--code-string)">'T'</span>)[0]\n}\n\n<span style="color: var(--code-comment)">// features/billing/utils.ts</span>\n<span style="color: var(--code-keyword)">import</span> { formatDate } <span style="color: var(--code-keyword)">from</span> <span style="color: var(--code-string)">'../../utils/date'</span></code></pre>`} />
+  </CodeStep>
+</SplitView>

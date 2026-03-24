@@ -1,0 +1,82 @@
+---
+layout: ../../layouts/Usecase.astro
+number: "03"
+title: "Production fire"
+subtitle: "Duplicate payments. Bug-as-test gate: reproduce first, then fix. No guessing."
+scenario: "Users are getting charged twice. The on-call Slack channel is lighting up. You need to fix this now — but Hypership won't let you skip the test."
+prev: { slug: "debt-after-a-sprint", title: "Debt after a sprint" }
+next: { slug: "cycle-visibility", title: "Cycle visibility" }
+---
+
+import Dialogue from '../../components/Dialogue.astro';
+import Msg from '../../components/DialogueMessage.astro';
+import SplitView from '../../components/SplitView.astro';
+import FlowStep from '../../components/FlowStep.astro';
+import CodeStep from '../../components/CodeStep.astro';
+import Tension from '../../components/Tension.astro';
+import TerminalBlock from '../../components/TerminalBlock.astro';
+
+<Dialogue>
+  <Msg from="you">/delivery fix duplicate payment processing</Msg>
+  <Msg from="hs" tags={["classified: bugfix", "bug-as-test gate"]}>
+    Classified as **bugfix**. Bug-as-test gate activated.
+    Before I touch any code: write a failing test that reproduces the bug.
+  </Msg>
+  <Msg from="you">But this is urgent — users are getting double-charged right now.</Msg>
+  <Msg from="hs" tags={["gate enforced"]}>
+    Understood. The gate exists *because* it's urgent.
+    Guessing at a fix without reproduction is how you ship a second bug.
+    Write the test — I'll confirm RED, then we fix.
+  </Msg>
+  <Msg from="you">OK, test written. It expects a single charge for a single checkout.</Msg>
+  <Msg from="hs" tags={["RED ✓", "reproduction confirmed"]}>
+    Test runs: **RED** — duplicate charge confirmed in test.
+    Bug reproduced. Now implementing the fix.
+  </Msg>
+  <Msg from="hs" tags={["fix applied", "GREEN ✓"]}>
+    Race condition in payment handler — two concurrent requests, no idempotency check.
+    Added idempotency key. Test runs: **GREEN**.
+    All 34 tests passing.
+  </Msg>
+</Dialogue>
+
+<SplitView>
+  <FlowStep title="Bugfix classified">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /delivery fix duplicate payment processing</div>
+      <div class="dim">⟩ classified: <span class="value">bugfix</span></div>
+      <div class="dim">⟩ gate: <span class="value">bug-as-test</span></div>
+      <div class="dim">⟩ <span style="color: var(--warning)">write a failing test first</span></div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Failing test" annotation="RED — reproduces the double charge" mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/__tests__/checkout.test.ts</span>\nit(<span style="color: var(--code-string)">'charges exactly once per checkout'</span>, <span style="color: var(--code-keyword)">async</span> () => {\n  <span style="color: var(--code-keyword)">const</span> result = <span style="color: var(--code-keyword)">await</span> processCheckout(order)\n  expect(result.charges).toHaveLength(1) <span style="color: var(--error)"> // ← FAILS: got 2</span>\n})</code></pre>`} />
+  </CodeStep>
+
+  <FlowStep title="RED confirmed">
+    <TerminalBlock>
+      <div class="dim">⟩ running test...</div>
+      <div class="dim">⟩ <span style="color: var(--error)">FAIL</span>: expected 1 charge, received 2</div>
+      <div class="dim">⟩ bug-as-test gate: <span class="success">RED confirmed ✓</span></div>
+      <div class="dim">⟩ proceeding to fix...</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="The race condition" annotation="concurrent requests, no idempotency — the root cause" mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/handler.ts</span>\n<span style="color: var(--code-keyword)">async function</span> handlePayment(order) {\n  <span style="color: var(--code-keyword)">const</span> charge = <span style="color: var(--code-keyword)">await</span> gateway.charge(order.amount)\n  <span style="color: var(--warning)">// ← no idempotency key</span>\n  <span style="color: var(--warning)">// ← concurrent retries create duplicates</span>\n  <span style="color: var(--code-keyword)">await</span> db.insert(<span style="color: var(--code-string)">'charges'</span>, charge)\n  <span style="color: var(--code-keyword)">return</span> charge\n}</code></pre>`} />
+  </CodeStep>
+
+  <Tension left="urgency" right="discipline" />
+
+  <FlowStep title="GREEN">
+    <TerminalBlock>
+      <div class="dim">⟩ fix applied</div>
+      <div class="dim">⟩ running tests...</div>
+      <div class="dim">⟩ <span class="success">PASS</span>: charges exactly once per checkout</div>
+      <div class="dim">⟩ all tests: <span class="success">34/34 ✓</span></div>
+      <div class="success">✓ delivered — bug fixed with test proof</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Fixed with idempotency" annotation="idempotency key prevents duplicates, test proves it ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/handler.ts</span> <span style="color: var(--success)">← fixed</span>\n<span style="color: var(--code-keyword)">async function</span> handlePayment(order) {\n  <span style="color: var(--code-keyword)">const</span> key = idempotencyKey(order.id)\n  <span style="color: var(--code-keyword)">if</span> (<span style="color: var(--code-keyword)">await</span> db.exists(<span style="color: var(--code-string)">'charges'</span>, { key })) <span style="color: var(--code-keyword)">return</span>\n  <span style="color: var(--code-keyword)">const</span> charge = <span style="color: var(--code-keyword)">await</span> gateway.charge(order.amount, { key })\n  <span style="color: var(--code-keyword)">await</span> db.insert(<span style="color: var(--code-string)">'charges'</span>, { ...charge, key })\n  <span style="color: var(--code-keyword)">return</span> charge\n}</code></pre>`} />
+  </CodeStep>
+</SplitView>

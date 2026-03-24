@@ -1,0 +1,87 @@
+---
+layout: ../../layouts/Usecase.astro
+number: "05"
+title: "Legacy without fear"
+subtitle: "Inherited monolith. Module-scoped cleanup with snapshot, escape hatch, hard stop."
+scenario: "You inherited a payments module that nobody wants to touch. It works, but the code is tangled — 6 different patterns for the same operation, dead imports everywhere. You need to clean it without breaking the 124 tests that keep it alive."
+prev: { slug: "cycle-visibility", title: "Cycle visibility" }
+next: null
+---
+
+import Dialogue from '../../components/Dialogue.astro';
+import Msg from '../../components/DialogueMessage.astro';
+import SplitView from '../../components/SplitView.astro';
+import FlowStep from '../../components/FlowStep.astro';
+import CodeStep from '../../components/CodeStep.astro';
+import Tension from '../../components/Tension.astro';
+import TerminalBlock from '../../components/TerminalBlock.astro';
+
+<Dialogue>
+  <Msg from="you">/removedebt payments module</Msg>
+  <Msg from="hs" tags={["scan ✓", "7 items found"]}>
+    Scanned payments module — 7 concrete items found.
+    Snapshot locked: **124 tests passing**.
+    Select which items to consolidate.
+  </Msg>
+  <Msg from="you">select 1-5, skip 6-7 for now</Msg>
+  <Msg from="hs" tags={["5 selected", "escape hatch: 2"]}>
+    5 items queued. You declared 2 escape hatches (items 2, 4) —
+    if tests break on those, they revert and continue.
+    Starting execution.
+  </Msg>
+  <Msg from="hs" tags={["item 3: HARD STOP"]}>
+    Items 1-2 done. Item 3: test count dropped from 124 to 121.
+    **HARD STOP** — 3 tests deleted, not just failing. Stopping execution.
+    Investigate before continuing.
+  </Msg>
+  <Msg from="you">Found it — a refactored function made 3 test helpers unused. Tests weren't deleted, they were in a file that got merged. Re-registering them.</Msg>
+  <Msg from="hs" tags={["continue ✓", "124/124 ✓"]}>
+    Tests re-registered. 124/124 passing. Resuming.
+    Items 3-5 done. All safety gates satisfied.
+  </Msg>
+</Dialogue>
+
+<SplitView>
+  <FlowStep title="Scan and snapshot">
+    <TerminalBlock>
+      <div><span class="prompt">&gt;</span> /removedebt payments module</div>
+      <div class="dim">⟩ scanning payments/...</div>
+      <div class="dim">⟩ found <span class="value">7</span> concrete items</div>
+      <div class="dim">⟩ snapshot: <span class="success">124 tests ✓</span></div>
+      <div class="dim">⟩ selected: 5 of 7</div>
+      <div class="dim">⟩ escape hatches declared: items 2, 4</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Legacy charge patterns" annotation="3 different ways to charge — same operation, different shapes" mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/stripe.ts</span>\n<span style="color: var(--code-keyword)">await</span> stripe.charges.create({ amount, currency })\n\n<span style="color: var(--code-comment)">// payments/process.ts</span> <span style="color: var(--warning)">← different pattern</span>\n<span style="color: var(--code-keyword)">await</span> createCharge({ value: amount, cur: currency })\n\n<span style="color: var(--code-comment)">// payments/legacy-billing.ts</span> <span style="color: var(--warning)">← yet another</span>\n<span style="color: var(--code-keyword)">await</span> bill(amount, currency, <span style="color: var(--code-keyword)">null</span>, <span style="color: var(--code-keyword)">null</span>, <span style="color: var(--code-string)">'default'</span>)</code></pre>`} />
+  </CodeStep>
+
+  <FlowStep title="HARD STOP on item 3">
+    <TerminalBlock>
+      <div class="dim">⟩ item 1: <span class="success">124/124 ✓</span></div>
+      <div class="dim">⟩ item 2: <span class="success">124/124 ✓</span> (escape hatch not needed)</div>
+      <div class="dim">⟩ item 3: <span style="color: var(--error)">HARD STOP</span></div>
+      <div class="dim">⟩ test count: 124 → <span style="color: var(--error)">121</span></div>
+      <div class="dim">⟩ <span style="color: var(--error)">3 tests disappeared — not failing, missing</span></div>
+      <div class="dim">⟩ execution paused. investigate.</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="The missing tests" annotation="tests weren't deleted — file got merged, registrations lost" mood="debt">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/__tests__/billing.test.ts</span> <span style="color: var(--warning)">← merged into process.test.ts</span>\ndescribe(<span style="color: var(--code-string)">'legacy billing'</span>, () => {\n  it(<span style="color: var(--code-string)">'handles refunds'</span>, ...)\n  it(<span style="color: var(--code-string)">'applies discounts'</span>, ...)\n  it(<span style="color: var(--code-string)">'rounds currency'</span>, ...)\n  <span style="color: var(--warning)">// ← 3 tests present but not re-registered after merge</span>\n})</code></pre>`} />
+  </CodeStep>
+
+  <Tension left="safety" right="progress" />
+
+  <FlowStep title="Resolved and complete">
+    <TerminalBlock>
+      <div class="dim">⟩ tests re-registered</div>
+      <div class="dim">⟩ item 3: <span class="success">124/124 ✓</span></div>
+      <div class="dim">⟩ item 4: <span class="success">124/124 ✓</span> (escape hatch not needed)</div>
+      <div class="dim">⟩ item 5: <span class="success">124/124 ✓</span></div>
+      <div class="success">✓ consolidated — all safety gates satisfied</div>
+    </TerminalBlock>
+  </FlowStep>
+  <CodeStep title="Unified processCharge" annotation="one pattern, all tests accounted for, hard stop earned trust ✓" mood="clean">
+    <Fragment set:html={`<pre><code><span style="color: var(--code-comment)">// payments/charge.ts</span> <span style="color: var(--success)">← unified</span>\n<span style="color: var(--code-keyword)">export async function</span> processCharge({\n  amount,\n  currency,\n  idempotencyKey,\n}: ChargeRequest) {\n  <span style="color: var(--code-keyword)">return</span> gateway.charge({ amount, currency, idempotencyKey })\n}</code></pre>`} />
+  </CodeStep>
+</SplitView>
