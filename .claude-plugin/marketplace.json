@@ -10,6 +10,7 @@
       "description": "Ship features with testing gates. Consolidate debt with safety nets. AI-first delivery framework for senior engineering teams.",
       "version": "1.0.0",
       "source": "./",
+      "repository": "hgrafa/hypership",
       "author": {
         "name": "hgrafa"
       }
