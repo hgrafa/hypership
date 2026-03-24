@@ -1,9 +1,22 @@
 {
   "name": "hypership",
   "version": "1.0.0",
-  "description": "AI-first delivery and tech debt management for senior engineering teams. Wraps Superpowers and Ralph Loop with intelligent orchestration.",
-  "author": "hgrafa",
+  "description": "Ship features with testing gates. Consolidate debt with safety nets. AI-first delivery framework for senior engineering teams.",
+  "author": {
+    "name": "hgrafa"
+  },
+  "homepage": "https://github.com/hgrafa/hypership",
+  "repository": "https://github.com/hgrafa/hypership",
   "license": "MIT",
+  "keywords": [
+    "delivery",
+    "tech-debt",
+    "testing-gates",
+    "safety-gates",
+    "tdd",
+    "orchestration",
+    "superpowers"
+  ],
   "dependencies": {
     "plugins": ["superpowers@superpowers-marketplace"]
   }

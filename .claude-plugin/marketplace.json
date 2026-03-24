@@ -1,9 +1,18 @@
 {
+  "name": "hypership-marketplace",
+  "description": "Marketplace for Hypership delivery framework",
+  "owner": {
+    "name": "hgrafa"
+  },
   "plugins": [
     {
       "name": "hypership",
-      "description": "AI-first delivery and tech debt management. /delivery wraps Superpowers+Ralph for feature implementation. /removedebt analyzes git diffs and removes real tech debt with strategic questions for senior engineers.",
-      "repository": "hgrafa/hypership"
+      "description": "Ship features with testing gates. Consolidate debt with safety nets. AI-first delivery framework for senior engineering teams.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "hgrafa"
+      }
     }
   ]
 }
