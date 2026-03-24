@@ -1,10 +1,9 @@
 ---
 name: delivery
 description: >
-  ALWAYS invoke when implementing features, fixing bugs, or delivering
-  any functional change. Do not start implementation without this skill.
-  Triggers: /delivery, "implement", "build", "ship", "develop", "create feature",
-  "fix bug", "add feature", "new endpoint", "new component", "new module".
+  Invoked by /delivery command. Orchestrates feature delivery with Phase 0
+  classification, testing gates, and Superpowers/Ralph Loop pipeline selection.
+  Do not invoke directly — use the /delivery command.
 ---
 
 # Delivery

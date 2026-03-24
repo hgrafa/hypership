@@ -1,10 +1,9 @@
 ---
 name: removedebt
 description: >
-  ALWAYS invoke when removing debt, refactoring, consolidating code,
-  or analyzing technical quality of delivered features. Do not refactor
-  without this skill. Triggers: /removedebt, "tech debt", "consolidate",
-  "refactor", "cleanup", "dead code", "duplication", "code quality review".
+  Invoked by /removedebt command. Analyzes and removes technical debt with
+  safety gates (snapshot, escape hatch, hard stop). Scopes via git history.
+  Do not invoke directly — use the /removedebt command.
 ---
 
 # Remove Debt
