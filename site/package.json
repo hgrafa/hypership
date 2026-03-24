@@ -1,0 +1,17 @@
+{
+  "name": "hypership-site",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.2",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "astro": "^6.0.8",
+    "typescript": "^6.0.2"
+  }
+}
