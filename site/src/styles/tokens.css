@@ -44,8 +44,9 @@
   --column-gap: var(--space-3);
 }
 
+/* Dark mode — system preference or manual override */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #1b1b1c;
     --text-primary: #dddad2;
     --text-secondary: #94918a;
@@ -60,4 +61,21 @@
     --code-string: #a8c878;
     --code-comment: #636158;
   }
+}
+
+/* Manual dark override */
+:root[data-theme="dark"] {
+  --bg: #1b1b1c;
+  --text-primary: #dddad2;
+  --text-secondary: #94918a;
+  --text-accent: #8e8b80;
+  --surface: rgba(220, 210, 195, 0.04);
+  --surface-hover: rgba(220, 210, 195, 0.06);
+  --border: rgba(108, 108, 98, 0.05);
+  --border-strong: rgba(130, 135, 145, 0.10);
+  --terminal-bg: #141415;
+
+  --code-keyword: #c8a87a;
+  --code-string: #a8c878;
+  --code-comment: #636158;
 }

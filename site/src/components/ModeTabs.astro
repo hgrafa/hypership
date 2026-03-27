@@ -1,6 +1,66 @@
-<div class="tabs">
-  <button class="tab tab-ootb" data-tab="ootb">out-of-the-box</button>
-  <button class="tab tab-nerd" data-tab="nerd">im-a-nerd</button>
+<div class="mode-wrapper">
+  <span class="mode-label-top">reading mode</span>
+  <div class="mode-switch">
+    <button class="mode-option" data-tab="ootb">
+    <svg class="mode-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <!-- pixel art: power-up mushroom -->
+      <!-- cap -->
+      <rect x="8" y="0" width="8" height="2"/>
+      <rect x="6" y="2" width="12" height="2"/>
+      <rect x="4" y="4" width="16" height="2"/>
+      <rect x="2" y="6" width="20" height="4"/>
+      <rect x="4" y="10" width="16" height="2"/>
+      <!-- cap spots (cutout) -->
+      <rect x="5" y="5" width="4" height="4" fill="var(--bg)"/>
+      <rect x="15" y="5" width="4" height="4" fill="var(--bg)"/>
+      <rect x="10" y="3" width="4" height="3" fill="var(--bg)"/>
+      <!-- face band -->
+      <rect x="6" y="12" width="12" height="2" fill="var(--bg)"/>
+      <!-- eyes -->
+      <rect x="8" y="12" width="2" height="2"/>
+      <rect x="14" y="12" width="2" height="2"/>
+      <!-- stem/body -->
+      <rect x="6" y="14" width="12" height="4"/>
+      <!-- feet -->
+      <rect x="4" y="18" width="6" height="3"/>
+      <rect x="14" y="18" width="6" height="3"/>
+      <rect x="10" y="18" width="4" height="2" fill="var(--bg)"/>
+    </svg>
+    <span class="mode-label">just-ship-it</span>
+  </button>
+  <div class="mode-divider"></div>
+  <button class="mode-option" data-tab="nerd">
+    <svg class="mode-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <!-- pixel art: terminal creature with antenna and glasses -->
+      <!-- antenna -->
+      <rect x="11" y="0" width="2" height="3"/>
+      <rect x="9" y="0" width="2" height="2" opacity="0.5"/>
+      <rect x="13" y="0" width="2" height="2" opacity="0.5"/>
+      <!-- head/screen body -->
+      <rect x="3" y="3" width="18" height="14"/>
+      <!-- screen bezel (inner lighter area) -->
+      <rect x="5" y="5" width="14" height="10" opacity="0.15" fill="var(--bg)"/>
+      <!-- eyes (glasses style - square with bridge) -->
+      <rect x="6" y="7" width="4" height="4" fill="var(--bg)"/>
+      <rect x="14" y="7" width="4" height="4" fill="var(--bg)"/>
+      <rect x="10" y="8" width="4" height="2" fill="var(--bg)" opacity="0.5"/>
+      <!-- pupils -->
+      <rect x="7" y="8" width="2" height="2"/>
+      <rect x="15" y="8" width="2" height="2"/>
+      <!-- prompt mouth >_ -->
+      <rect x="8" y="13" width="2" height="2" fill="var(--bg)"/>
+      <rect x="10" y="13" width="2" height="2" fill="var(--bg)" opacity="0.5"/>
+      <!-- legs -->
+      <rect x="5" y="17" width="3" height="3"/>
+      <rect x="10" y="17" width="4" height="2"/>
+      <rect x="16" y="17" width="3" height="3"/>
+      <!-- feet -->
+      <rect x="4" y="20" width="5" height="2"/>
+      <rect x="15" y="20" width="5" height="2"/>
+    </svg>
+    <span class="mode-label">im-a-nerd</span>
+  </button>
+  </div>
 </div>
 
 <script is:inline>
@@ -8,47 +68,69 @@
   function setMode(mode) {
     document.documentElement.setAttribute('data-mode', mode);
     localStorage.setItem('hs-mode', mode);
-    document.querySelectorAll('.tab').forEach(function(t) {
-      t.classList.toggle('active', t.dataset.tab === mode);
+    document.querySelectorAll('.mode-option').forEach(function(o) {
+      o.classList.toggle('active', o.dataset.tab === mode);
     });
   }
 
-  document.querySelectorAll('.tab').forEach(function(t) {
-    t.addEventListener('click', function() {
-      setMode(t.dataset.tab);
+  document.querySelectorAll('.mode-option').forEach(function(o) {
+    o.addEventListener('click', function() {
+      setMode(o.dataset.tab);
     });
   });
 
-  // Initialize from localStorage or default
   var saved = localStorage.getItem('hs-mode') || 'ootb';
   setMode(saved);
 })();
 </script>
 
 <style>
-  .tabs {
-    display: flex;
-    border-bottom: 1.5px solid var(--border);
-    gap: 0;
+  .mode-wrapper {
     margin-top: var(--space-3);
   }
-  .tab {
+  .mode-label-top {
+    display: block;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-accent);
+    margin-bottom: 0.5rem;
+  }
+  .mode-switch {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1.5px solid var(--border-strong);
+  }
+  .mode-option {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 1rem;
     background: none;
     border: none;
     font-family: var(--font-mono);
-    font-size: var(--text-base);
+    font-size: var(--text-xs);
+    letter-spacing: 0.5px;
     color: var(--text-accent);
-    padding: var(--space-1) var(--space-3);
     cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1.5px;
+    transition: background 0.15s, color 0.15s;
   }
-  .tab.active {
-    color: var(--text-primary);
-    font-weight: 600;
-    border-bottom-color: var(--text-primary);
-  }
-  .tab:hover:not(.active) {
+  .mode-option:hover:not(.active) {
+    background: var(--surface);
     color: var(--text-secondary);
+  }
+  .mode-option.active {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+  .mode-icon {
+    flex-shrink: 0;
+  }
+  .mode-divider {
+    width: 1.5px;
+    background: var(--border-strong);
+  }
+  .mode-label {
+    white-space: nowrap;
   }
 </style>

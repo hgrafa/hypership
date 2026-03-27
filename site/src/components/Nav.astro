@@ -19,12 +19,45 @@ const { breadcrumb } = Astro.props;
         </>
       )}
       {breadcrumb && (
-        <a href="/#use-cases">← all cases</a>
+        <a href="/#use-cases">&larr; all cases</a>
       )}
-      <a href="https://github.com/hgrafa/hypership" target="_blank" rel="noopener">github ↗</a>
+      <a href="https://github.com/hgrafa/hypership" target="_blank" rel="noopener">github &nearr;</a>
+      <button id="theme-toggle" class="theme-switch" aria-label="Toggle theme">
+        <span class="switch-track">
+          <span class="switch-side switch-light" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2.5"/><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2.5"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2.5"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2.5"/><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2.5"/><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2.5"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2.5"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2.5"/></svg>
+          </span>
+          <span class="switch-side switch-dark" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+        </span>
+      </button>
     </div>
   </div>
 </nav>
+
+<script is:inline>
+(function() {
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+
+  function getEffectiveTheme() {
+    var stored = localStorage.getItem('hs-theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('hs-theme', theme);
+  }
+
+  btn.addEventListener('click', function() {
+    var current = getEffectiveTheme();
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
 
 <style>
   .nav {
@@ -34,8 +67,7 @@ const { breadcrumb } = Astro.props;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
+    height: 3.5rem;
   }
   .nav-left {
     display: flex;
@@ -53,6 +85,7 @@ const { breadcrumb } = Astro.props;
   }
   .nav-right {
     display: flex;
+    align-items: center;
     gap: var(--space-3);
     font-size: var(--text-xs);
     text-transform: uppercase;
@@ -63,5 +96,29 @@ const { breadcrumb } = Astro.props;
   }
   .nav-right a:hover {
     color: var(--text-primary);
+  }
+  .theme-switch {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  .switch-track {
+    display: flex;
+    border: 1.5px solid var(--border-strong);
+  }
+  .switch-side {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-accent);
+    transition: background 0.15s, color 0.15s;
+  }
+  .theme-switch:hover .switch-side {
+    border-color: var(--text-accent);
   }
 </style>
