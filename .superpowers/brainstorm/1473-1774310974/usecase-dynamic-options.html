@@ -1,0 +1,233 @@
+<h2>Usecase Subpage — Menos estático</h2>
+<p class="subtitle">3 abordagens com mais vida. Mesmo conteúdo, formas diferentes de contar.</p>
+
+<!-- OPTION A: Journey / Timeline -->
+<div class="card" data-choice="a" onclick="toggleSelect(this)" style="margin-bottom:20px;">
+  <div class="card-image" style="padding:0;overflow:hidden;">
+    <div style="
+      background: #f5f0e8;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,130,0.13) 28px),
+        url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%224%22 stitchTiles=%22stitch%22/><feColorMatrix type=%22saturate%22 values=%220%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      padding: 28px 28px;
+    ">
+      <div style="color:#8a7a65;font-size:8px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">out-of-the-box mode</div>
+
+      <!-- Journey: horizontal scroll feel -->
+      <div style="display:flex;gap:0;align-items:stretch;">
+        <!-- Chapter 1 -->
+        <div style="flex:1;position:relative;">
+          <div style="background:rgba(44,36,24,0.06);padding:16px;min-height:140px;">
+            <div style="color:#2c2418;font-size:18px;font-weight:300;margin-bottom:2px;">01</div>
+            <div style="color:#2c2418;font-size:10px;font-weight:600;margin-bottom:6px;">The ask</div>
+            <div style="font-size:9px;color:#6b5d4f;line-height:1.6;margin-bottom:10px;">"Add roles to our auth system"</div>
+            <div style="font-size:8px;color:#8a7a65;line-height:1.5;padding-top:8px;border-top:1px solid rgba(138,122,101,0.15);">
+              Hypership classifies:<br>
+              <strong style="color:#2c2418;">feature</strong> → interactive pipeline
+            </div>
+          </div>
+          <div style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:#8a7a65;font-size:16px;z-index:1;">›</div>
+        </div>
+
+        <div style="width:16px;"></div>
+
+        <!-- Chapter 2 -->
+        <div style="flex:1;position:relative;">
+          <div style="background:rgba(44,36,24,0.06);padding:16px;min-height:140px;">
+            <div style="color:#2c2418;font-size:18px;font-weight:300;margin-bottom:2px;">02</div>
+            <div style="color:#2c2418;font-size:10px;font-weight:600;margin-bottom:6px;">The process</div>
+            <div style="font-size:9px;color:#6b5d4f;line-height:1.6;">
+              <div style="margin-bottom:4px;">brainstorm scope <span style="color:#9a8a6e;">✓</span></div>
+              <div style="margin-bottom:4px;">write plan <span style="color:#9a8a6e;">✓</span></div>
+              <div style="margin-bottom:4px;">implement with TDD <span style="color:#9a8a6e;">✓</span></div>
+              <div>acceptance gate <span style="color:#9a8a6e;">✓</span></div>
+            </div>
+          </div>
+          <div style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:#8a7a65;font-size:16px;z-index:1;">›</div>
+        </div>
+
+        <div style="width:16px;"></div>
+
+        <!-- Chapter 3 -->
+        <div style="flex:1;position:relative;">
+          <div style="background:rgba(44,36,24,0.06);padding:16px;min-height:140px;">
+            <div style="color:#2c2418;font-size:18px;font-weight:300;margin-bottom:2px;">03</div>
+            <div style="color:#2c2418;font-size:10px;font-weight:600;margin-bottom:6px;">Next layer</div>
+            <div style="font-size:9px;color:#6b5d4f;line-height:1.6;margin-bottom:10px;">"Now add claims and permissions"</div>
+            <div style="font-size:8px;color:#8a7a65;line-height:1.5;padding-top:8px;border-top:1px solid rgba(138,122,101,0.15);">
+              Same discipline,<br>fresh context, new plan
+            </div>
+          </div>
+          <div style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:#8a7a65;font-size:16px;z-index:1;">›</div>
+        </div>
+
+        <div style="width:16px;"></div>
+
+        <!-- Chapter 4 -->
+        <div style="flex:1;">
+          <div style="background:rgba(44,36,24,0.08);padding:16px;min-height:140px;border-left:2px solid #2c2418;">
+            <div style="color:#2c2418;font-size:18px;font-weight:300;margin-bottom:2px;">04</div>
+            <div style="color:#2c2418;font-size:10px;font-weight:600;margin-bottom:6px;">Consolidate</div>
+            <div style="font-size:9px;color:#6b5d4f;line-height:1.6;margin-bottom:10px;">/removedebt finds 3 real items, filters 8 speculative.</div>
+            <div style="font-size:8px;color:#9a8a6e;line-height:1.5;padding-top:8px;border-top:1px solid rgba(138,122,101,0.15);">
+              47/47 tests passing<br>
+              zero regressions
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <h3>A — Chapters / Journey</h3>
+    <p>Cada step é um "capítulo" horizontal. Conta a história como progressão. Navegação por scroll horizontal ou setas. Sente como uma jornada, não uma lista.</p>
+  </div>
+</div>
+
+<!-- OPTION B: Conversational / Dialogue -->
+<div class="card" data-choice="b" onclick="toggleSelect(this)" style="margin-bottom:20px;">
+  <div class="card-image" style="padding:0;overflow:hidden;">
+    <div style="
+      background: #f5f0e8;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,130,0.13) 28px),
+        url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%224%22 stitchTiles=%22stitch%22/><feColorMatrix type=%22saturate%22 values=%220%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      padding: 28px 28px;
+    ">
+      <div style="color:#8a7a65;font-size:8px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">out-of-the-box mode</div>
+
+      <!-- Dialogue style -->
+      <div style="max-width:420px;">
+        <!-- User -->
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <div style="min-width:24px;height:24px;background:rgba(44,36,24,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#5a4d3e;font-weight:600;">you</div>
+          <div style="background:rgba(44,36,24,0.06);padding:10px 14px;border-radius:2px 8px 8px 8px;font-size:10px;color:#2c2418;">/delivery add role-based access to auth</div>
+        </div>
+
+        <!-- Hypership -->
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <div style="min-width:24px;height:24px;background:#2c2418;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:#f5f0e8;font-weight:600;">hs</div>
+          <div style="flex:1;">
+            <div style="background:rgba(44,36,24,0.04);padding:10px 14px;border-radius:8px 2px 8px 8px;font-size:9px;color:#6b5d4f;line-height:1.7;">
+              Classified as <strong style="color:#2c2418;">feature</strong>. I'll use Superpowers for this.<br>
+              Brainstorming scope... writing plan... 3 tasks.
+            </div>
+            <div style="display:flex;gap:6px;margin-top:6px;">
+              <div style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:3px 8px;border-radius:2px;">brainstorm ✓</div>
+              <div style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:3px 8px;border-radius:2px;">plan ✓</div>
+              <div style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:3px 8px;border-radius:2px;">TDD ✓</div>
+              <div style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:3px 8px;border-radius:2px;">gate ✓</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User again -->
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <div style="min-width:24px;height:24px;background:rgba(44,36,24,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#5a4d3e;font-weight:600;">you</div>
+          <div style="background:rgba(44,36,24,0.06);padding:10px 14px;border-radius:2px 8px 8px 8px;font-size:10px;color:#2c2418;">/delivery add claims and granular permissions</div>
+        </div>
+
+        <!-- Hypership -->
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <div style="min-width:24px;height:24px;background:#2c2418;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:#f5f0e8;font-weight:600;">hs</div>
+          <div style="background:rgba(44,36,24,0.04);padding:10px 14px;border-radius:8px 2px 8px 8px;font-size:9px;color:#6b5d4f;line-height:1.7;">
+            Builds on roles layer. Fresh brainstorm, 5 tasks planned.<br>
+            <span style="color:#9a8a6e;">✓ delivered — tagged delivery/claims-v1</span>
+          </div>
+        </div>
+
+        <!-- User consolidate -->
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <div style="min-width:24px;height:24px;background:rgba(44,36,24,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#5a4d3e;font-weight:600;">you</div>
+          <div style="background:rgba(44,36,24,0.06);padding:10px 14px;border-radius:2px 8px 8px 8px;font-size:10px;color:#2c2418;">/removedebt auth module last 2 features</div>
+        </div>
+
+        <!-- Hypership response -->
+        <div style="display:flex;gap:10px;">
+          <div style="min-width:24px;height:24px;background:#2c2418;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:#f5f0e8;font-weight:600;">hs</div>
+          <div style="flex:1;">
+            <div style="background:rgba(44,36,24,0.04);padding:10px 14px;border-radius:8px 2px 8px 8px;font-size:9px;color:#6b5d4f;line-height:1.7;">
+              Found 3 real items, filtered 8 speculative. Safety gates active.<br>
+              <span style="color:#9a8a6e;">✓ 3/3 consolidated — 47/47 tests, zero regressions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <h3>B — Dialogue / Conversational</h3>
+    <p>Formato de chat entre "you" e "hs" (hypership). Mostra a interação como realmente acontece — um diálogo. Familiar para quem usa LLMs. Cada troca é um momento da história.</p>
+  </div>
+</div>
+
+<!-- OPTION C: Accordion / Expand -->
+<div class="card" data-choice="c" onclick="toggleSelect(this)" style="margin-bottom:20px;">
+  <div class="card-image" style="padding:0;overflow:hidden;">
+    <div style="
+      background: #f5f0e8;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,130,0.13) 28px),
+        url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%224%22 stitchTiles=%22stitch%22/><feColorMatrix type=%22saturate%22 values=%220%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      padding: 28px 28px;
+    ">
+      <div style="color:#8a7a65;font-size:8px;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">out-of-the-box mode</div>
+
+      <!-- Accordion style -->
+      <!-- Step 1 expanded -->
+      <div style="border:1px solid rgba(138,122,101,0.15);margin-bottom:2px;">
+        <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(44,36,24,0.04);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="color:#2c2418;font-size:14px;font-weight:300;">01</span>
+            <span style="color:#2c2418;font-size:10px;font-weight:600;">"Add roles to auth"</span>
+            <span style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:2px 6px;border-radius:2px;">delivered ✓</span>
+          </div>
+          <span style="color:#8a7a65;font-size:10px;">▾</span>
+        </div>
+        <div style="padding:14px 16px;border-top:1px solid rgba(138,122,101,0.1);">
+          <div style="font-size:9px;color:#6b5d4f;line-height:1.8;">
+            Classified as feature → Superpowers pipeline.<br>
+            Brainstormed scope → 3 tasks planned → TDD implementation.<br>
+            Acceptance gate: 3/3 criteria covered.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 collapsed -->
+      <div style="border:1px solid rgba(138,122,101,0.15);margin-bottom:2px;">
+        <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="color:#2c2418;font-size:14px;font-weight:300;">02</span>
+            <span style="color:#2c2418;font-size:10px;font-weight:600;">"Add claims and permissions"</span>
+            <span style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:2px 6px;border-radius:2px;">delivered ✓</span>
+          </div>
+          <span style="color:#8a7a65;font-size:10px;">▸</span>
+        </div>
+      </div>
+
+      <!-- Step 3 collapsed -->
+      <div style="border:1px solid rgba(138,122,101,0.15);margin-bottom:2px;">
+        <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="color:#2c2418;font-size:14px;font-weight:300;">03</span>
+            <span style="color:#2c2418;font-size:10px;font-weight:600;">"Consolidate auth layer"</span>
+            <span style="font-size:7px;color:#9a8a6e;background:rgba(154,138,110,0.1);padding:2px 6px;border-radius:2px;">3/3 clean ✓</span>
+          </div>
+          <span style="color:#8a7a65;font-size:10px;">▸</span>
+        </div>
+      </div>
+
+      <!-- Summary below -->
+      <div style="margin-top:16px;padding:12px 16px;background:rgba(44,36,24,0.04);border-left:2px solid #2c2418;">
+        <div style="font-size:9px;color:#6b5d4f;line-height:1.7;">3 steps, 2 features + 1 consolidation. System evolved from basic auth to granular permissions. Zero regressions.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <h3>C — Accordion / Progressive disclosure</h3>
+    <p>Cada step é colapsável. Overview compacto — clica para expandir detalhes. O usuário controla a profundidade. Summary fixo embaixo. Interativo sem ser pesado.</p>
+  </div>
+</div>

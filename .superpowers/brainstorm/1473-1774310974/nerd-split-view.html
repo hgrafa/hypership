@@ -1,0 +1,174 @@
+<h2>im-a-nerd — Diálogo + Código nascendo</h2>
+<p class="subtitle">Esquerda: o fluxo com Hypership. Direita: o que vai surgindo no código. A tensão entre disciplina e realidade.</p>
+
+<div class="mockup">
+  <div class="mockup-header">im-a-nerd mode — evolving auth: roles → claims</div>
+  <div class="mockup-body" style="padding:0;">
+    <div style="
+      background: #f5f0e8;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,130,0.13) 28px),
+        url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%224%22 stitchTiles=%22stitch%22/><feColorMatrix type=%22saturate%22 values=%220%22/></filter><rect width=%22300%22 height=%22300%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    ">
+
+      <!-- Tabs -->
+      <div style="padding:20px 28px 0;">
+        <div style="display:flex;border-bottom:1.5px solid rgba(138,122,101,0.2);gap:0;">
+          <div style="padding:10px 20px;font-size:10px;color:#8a7a65;">out-of-the-box</div>
+          <div style="padding:10px 20px;font-size:10px;color:#2c2418;font-weight:600;border-bottom:2px solid #2c2418;margin-bottom:-1.5px;">im-a-nerd</div>
+        </div>
+      </div>
+
+      <!-- Column headers -->
+      <div style="display:flex;padding:16px 28px 0;gap:16px;">
+        <div style="flex:1;font-size:8px;color:#8a7a65;text-transform:uppercase;letter-spacing:2px;">the flow</div>
+        <div style="flex:1;font-size:8px;color:#8a7a65;text-transform:uppercase;letter-spacing:2px;">the code</div>
+      </div>
+
+      <!-- STEP 1: First delivery -->
+      <div style="padding:12px 28px;">
+        <div style="display:flex;gap:16px;">
+
+          <!-- Left: dialogue -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div><span style="color:#8e8b80;">~ $</span> /delivery add role-based access to auth</div>
+              <div style="color:#8e8b80;">⟩ classified: <span style="color:#dddad2;">feature</span></div>
+              <div style="color:#8e8b80;">⟩ pipeline: <span style="color:#dddad2;">superpowers</span></div>
+              <div style="color:#8e8b80;">⟩ brainstorm → plan → TDD</div>
+              <div style="color:#9a8a6e;">✓ delivered</div>
+            </div>
+          </div>
+
+          <!-- Right: code emerging -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div style="color:#8e8b80;">// auth/roles.ts</div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">checkRole</span>(user, role) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> user.roles.includes(role)</div>
+              <div>}</div>
+              <div style="color:#8e8b80;margin-top:4px;">// middleware/auth.ts</div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">requireRole</span>(role) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> (req, res, next) <span style="color:#c8a87a;">=></span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;checkRole(req.user, role)</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;? next() : res.status(403)</div>
+              <div>}</div>
+              <div style="color:#636158;font-size:8px;margin-top:4px;">// clean, focused, tested ✓</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STEP 2: Second delivery — debt starts showing -->
+      <div style="padding:0 28px 12px;">
+        <div style="display:flex;gap:16px;">
+
+          <!-- Left -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div><span style="color:#8e8b80;">~ $</span> /delivery add claims and granular permissions</div>
+              <div style="color:#8e8b80;">⟩ classified: <span style="color:#dddad2;">feature</span></div>
+              <div style="color:#8e8b80;">⟩ builds on roles layer</div>
+              <div style="color:#8e8b80;">⟩ 5 tasks planned</div>
+              <div style="color:#9a8a6e;">✓ delivered</div>
+            </div>
+          </div>
+
+          <!-- Right: code getting messy -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div style="color:#8e8b80;">// auth/permissions.ts</div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">checkPermission</span>(user, perm) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">const</span> role = getUserRole(user) <span style="color:#966b5a;">// ← duplicates checkRole logic</span></div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> claims[role]?.includes(perm)</div>
+              <div>}</div>
+              <div style="color:#8e8b80;margin-top:4px;">// middleware/auth.ts</div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">requirePermission</span>(perm) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#966b5a;">// almost identical to requireRole</span></div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> (req, res, next) <span style="color:#c8a87a;">=></span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;checkPermission(req.user, perm)</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;? next() : res.status(403)</div>
+              <div>}</div>
+              <div style="color:#966b5a;font-size:8px;margin-top:4px;">// duplication creeping in — shipped fast, works, but...</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Visual tension callout -->
+      <div style="padding:0 28px 12px;">
+        <div style="background:rgba(44,36,24,0.06);padding:10px 16px;display:flex;align-items:center;gap:12px;">
+          <div style="font-size:9px;color:#8a7a65;flex:1;text-align:center;">← discipline</div>
+          <div style="font-size:10px;color:#2c2418;font-weight:600;">the tension is the point</div>
+          <div style="font-size:9px;color:#966b5a;flex:1;text-align:center;">reality →</div>
+        </div>
+      </div>
+
+      <!-- STEP 3: removedebt -->
+      <div style="padding:0 28px 12px;">
+        <div style="display:flex;gap:16px;">
+
+          <!-- Left: removedebt flow -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div><span style="color:#8e8b80;">~ $</span> /removedebt auth last 2 features</div>
+              <div style="color:#8e8b80;">⟩ scanning 14 files...</div>
+              <div style="color:#8e8b80;">⟩ found <span style="color:#dddad2;">3</span> concrete, filtered <span style="color:#636158;">8 speculative</span></div>
+              <div style="color:#dddad2;">&nbsp;&nbsp;1. duplicated role/perm check <span style="color:#8e8b80;">(2h)</span></div>
+              <div style="color:#dddad2;">&nbsp;&nbsp;2. unused legacy middleware <span style="color:#8e8b80;">(30m)</span></div>
+              <div style="color:#dddad2;">&nbsp;&nbsp;3. naming drift: role vs access <span style="color:#8e8b80;">(1h)</span></div>
+              <div style="color:#8e8b80;">⟩ snapshot: <span style="color:#9a8a6e;">47 tests ✓</span></div>
+              <div style="color:#8e8b80;">⟩ executing...</div>
+              <div style="color:#8e8b80;">⟩ item 1: <span style="color:#9a8a6e;">47/47 ✓</span></div>
+              <div style="color:#8e8b80;">⟩ item 2: <span style="color:#9a8a6e;">47/47 ✓</span></div>
+              <div style="color:#8e8b80;">⟩ item 3: <span style="color:#9a8a6e;">47/47 ✓</span></div>
+              <div style="color:#9a8a6e;">✓ consolidated — zero regressions</div>
+            </div>
+          </div>
+
+          <!-- Right: code cleaned up -->
+          <div style="flex:1;">
+            <div style="background:#1b1b1c;border-radius:4px;padding:14px;font-size:9px;line-height:1.9;color:#dddad2;">
+              <div style="color:#8e8b80;">// auth/access.ts <span style="color:#9a8a6e;">← unified</span></div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">checkAccess</span>(user, requirement) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">if</span> (requirement.type === <span style="color:#a8c878;">'role'</span>)</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> user.roles.includes(requirement.value)</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">if</span> (requirement.type === <span style="color:#a8c878;">'permission'</span>)</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> resolveClaims(user).has(requirement.value)</div>
+              <div>}</div>
+              <div style="color:#8e8b80;margin-top:4px;">// middleware/access.ts <span style="color:#9a8a6e;">← one middleware</span></div>
+              <div><span style="color:#c8a87a;">function</span> <span style="color:#dddad2;">requireAccess</span>(req) {</div>
+              <div>&nbsp;&nbsp;<span style="color:#c8a87a;">return</span> (req, res, next) <span style="color:#c8a87a;">=></span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;checkAccess(req.user, req)</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;? next() : res.status(403)</div>
+              <div>}</div>
+              <div style="color:#9a8a6e;font-size:8px;margin-top:4px;">// clean, unified, zero duplication ✓</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Essa abordagem funciona</h3>
+      <p>A tensão disciplina vs realidade conta a história sozinha</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">→</div>
+    <div class="content">
+      <h3>Precisa de ajuste</h3>
+      <p>Vou descrever no terminal</p>
+    </div>
+  </div>
+</div>
